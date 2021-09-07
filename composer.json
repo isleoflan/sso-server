@@ -1,0 +1,16 @@
+{
+  "name": "isleoflan/sso-server",
+  "description": "This package provides the SSO server for all IOL services",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "stui",
+      "email": "stui@isleoflan.ch"
+    }
+  ],
+  "require": {
+    "nowakowskir/php-jwt": "^2.0",
+    "vlucas/phpdotenv": "^5.3"
+  }
+}

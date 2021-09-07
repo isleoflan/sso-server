@@ -1,0 +1,46 @@
+{
+  "100001": {
+    "message": "The specified token has expired",
+    "errorCode": 401
+  },
+  "100002": {
+    "message": "The specified token is invalid",
+    "errorCode": 401
+  },
+  "100003": {
+    "message": "There was no token specified",
+    "errorCode": 401
+  },
+  "100004": {
+    "message": "Request method not allowed",
+    "errorCode": 405
+  },
+
+
+  "101001": {
+    "message": "Usage of disallowed Enum value",
+    "errorCode": 501
+  },
+
+
+  "999101": {
+    "message": "General Server Error",
+    "errorCode": 500
+  },
+  "999102": {
+    "message": "A SQL Error happened",
+    "errorCode": 500
+  },
+  "999103": {
+    "message": "The SQL server can not be reached",
+    "errorCode": 503
+  },
+  "999104": {
+    "message": "The server threw an unrecoverable error",
+    "errorCode": 503
+  },
+  "999105": {
+    "message": "Cannot read malformed JSON",
+    "errorCode": 503
+  }
+}
