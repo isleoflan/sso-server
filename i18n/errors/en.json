@@ -42,5 +42,11 @@
   "999105": {
     "message": "Cannot read malformed JSON",
     "errorCode": 503
+  },
+
+
+  "999999": {
+    "message": "Endpoint not found",
+    "errorCode": 404
   }
 }

@@ -1,0 +1,28 @@
+<?php
+
+    declare(strict_types=1);
+
+    use IOL\SSO\v1\Request\APIResponse;
+
+    $basePath = __DIR__;
+    for ($returnDirs = 0; $returnDirs < 3; $returnDirs++) {
+        $basePath = substr($basePath, 0, strrpos($basePath, '/'));
+    }
+
+
+    require_once $basePath.'/_loader.php';
+
+    $requestedFile = $_SERVER['REQUEST_URI'];
+    $requestedFile = str_contains($requestedFile, '?') ? substr(
+        $requestedFile,
+        0,
+        strpos($requestedFile, '?')
+    ) : $requestedFile;
+
+    $endpointUrl = $basePath.'/dist/base'.$requestedFile.'.php';
+    if (file_exists($endpointUrl)) {
+        $env = \IOL\SSO\v1\DataSource\Environment::getInstance();
+        require_once $endpointUrl;
+    } else {
+        APIResponse::getInstance()->addError(999999)->render();
+    }

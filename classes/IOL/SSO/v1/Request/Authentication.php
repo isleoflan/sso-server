@@ -38,11 +38,15 @@ class Authentication
             // renew the session for further usage
             $session->renew();
             $user = $session->getUser();
+
+            // if no user is attached to said session, cancel execution and throw an error
             if (is_null($user)) {
                 self::$authResult = false;
 
                 APIResponse::getInstance()->addError(100002)->render();
             }
+
+            // save auth result and user locally for later usage, so the token does not have to be decrypted yet again
             self::$user = $user;
             self::$authResult = true;
 
@@ -59,13 +63,13 @@ class Authentication
         // check, if Authorization header is present
         $authToken = false;
         $authHeader = APIResponse::getRequestHeader('Authorization');
-        //var_dump($authHeader);
         if (!is_null($authHeader)) {
             if (str_starts_with($authHeader, 'Bearer ')) {
                 $authToken = substr($authHeader, 7);
             }
         }
         if (!$authToken) {
+            // no actual token has been transmitted. Abort execution and send request to the gulag
             APIResponse::getInstance()->addError(100003)->render();
         }
 
@@ -77,12 +81,12 @@ class Authentication
             // Token validation failed.
             APIResponse::getInstance()->addError(100002)->render();
         } /*
-                // we're not expiring tokens, handling session expiry separately
+            // we're not expiring tokens, handling session expiry separately
 
-                catch (TokenExpiredException $e){
-                // token is expired
-                return ['success' => false,'object' => new Error(100001)];
-            }*/
+            catch (TokenExpiredException $e){
+            // token is expired
+            return ['success' => false,'object' => new Error(100001)];
+        }*/
 
         // get payload from token and check, if token is still valid
         $payload = $authToken->decode()->getPayload();
@@ -119,8 +123,8 @@ class Authentication
     {
         $rawToken = new TokenDecoded($data);
         $encodedToken = $rawToken->encode(
-            file_get_contents(File::getBasePath() . self::JWT_PRIVATE_KEY),
-            self::JWT_ALGORITHM
+            key: file_get_contents(File::getBasePath() . self::JWT_PRIVATE_KEY),
+            algorithm: self::JWT_ALGORITHM
         );
 
         return $encodedToken->toString();
@@ -128,11 +132,11 @@ class Authentication
 
     public static function getCurrentUser(): ?User
     {
-        if (!isset(self::$authResult)) {
+        if (!self::isAuthenticated()) {
             self::authenticate();
         }
 
-        return self::$authResult ? self::$user : null;
+        return self::isAuthenticated() ? self::$user : null;
     }
 
     public static function isAuthenticated(): bool
