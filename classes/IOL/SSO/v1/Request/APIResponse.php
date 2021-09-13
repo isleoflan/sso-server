@@ -7,8 +7,8 @@
     use IOL\SSO\v1\DataSource\Database;
     use IOL\SSO\v1\DataType\Date;
     use IOL\SSO\v1\DataType\UUID;
-    use IOL\SSO\v1\Entity\User;
-    use IOL\SSO\v1\Enums\RequestMethod;
+    use IOL\SSO\v1\Entity\oldUser;
+    use IOL\SSO\v1\BitMasks\RequestMethod;
     use JetBrains\PhpStorm\ArrayShape;
     use JetBrains\PhpStorm\NoReturn;
 
@@ -23,7 +23,7 @@
         public const DB_TABLE = 'api_requests';
 
         /**
-         * @var \IOL\SSO\v1\Request\APIResponse|null $instance
+         * @var APIResponse|null $instance
          *
          * the APIResponse object is handled as a singleton
          * the singleton instance is saved in this property
@@ -31,7 +31,7 @@
         protected static ?APIResponse $instance = null;
 
         /**
-         * @var \IOL\SSO\v1\Enums\RequestMethod $allowedRequestMethods
+         * @var RequestMethod $allowedRequestMethods
          *
          * this object defines, which HTTP request methods are allowed on the endpoint
          * @see RequestMethod
@@ -151,7 +151,7 @@
         }
 
         /**
-         * @return \IOL\SSO\v1\Request\APIResponse
+         * @return APIResponse
          *
          * returns the actual APIResponse object. If none has been instantiated yet, create a new object and
          * save it in APIResponse::$instance
@@ -171,7 +171,7 @@
             $this->authRequired = $needsAuth;
         }
 
-        public function check(): ?User
+        public function check(): ?oldUser
         {
             $this->checkForOptionsMethod();
 
@@ -473,7 +473,7 @@
         }
 
         /**
-         * @return \IOL\SSO\v1\Enums\RequestMethod
+         * @return RequestMethod
          */
         public function getAllowedRequestMethods(): RequestMethod
         {
@@ -481,7 +481,7 @@
         }
 
         /**
-         * @param \IOL\SSO\v1\Enums\RequestMethod $allowedRequestMethods
+         * @param RequestMethod $allowedRequestMethods
          */
         public function setAllowedRequestMethods(RequestMethod $allowedRequestMethods): void
         {

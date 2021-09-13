@@ -7,7 +7,7 @@ namespace IOL\SSO\v1\Request;
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
-use IOL\SSO\v1\Entity\User;
+use IOL\SSO\v1\Entity\oldUser;
 use DateInterval;
 use Exception;
 
@@ -41,8 +41,8 @@ class Session
     private Date $expiry;
 
     public function __construct(
-        private ?User   $user = null,
-        private ?string $sessionId = null
+        private ?oldUser $user = null,
+        private ?string  $sessionId = null
     )
     {
         if (!is_null($this->sessionId)) {
@@ -65,7 +65,7 @@ class Session
                 $this->setExpiry(new Date($data[0]['expiration']));
             } catch (Exception) {
             }
-            $this->setUser(new User(username: $data[0]['username']));
+            $this->setUser(new oldUser(username: $data[0]['username']));
         } else {
             $this->setSessionId(null);
         }
@@ -74,7 +74,7 @@ class Session
     /**
      * @return string|bool
      *
-     * create a new session for a given user. User object has to be set beforehand, either manually or by injecting it
+     * create a new session for a given user. oldUser object has to be set beforehand, either manually or by injecting it
      * into the constructor of the session object
      */
     public function create(): string|bool
@@ -221,9 +221,9 @@ class Session
     }
 
     /**
-     * @param User|null $user
+     * @param oldUser|null $user
      */
-    public function setUser(?User $user): void
+    public function setUser(?oldUser $user): void
     {
         $this->user = $user;
     }
@@ -253,9 +253,9 @@ class Session
     }
 
     /**
-     * @return User|null
+     * @return oldUser|null
      */
-    public function getUser(): ?User
+    public function getUser(): ?oldUser
     {
         return $this->user;
     }

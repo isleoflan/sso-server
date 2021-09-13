@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IOL\SSO\v1\Enums;
+namespace IOL\SSO\v1\BitMasks;
 
 
 class BitMask

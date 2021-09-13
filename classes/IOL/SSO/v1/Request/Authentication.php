@@ -6,7 +6,7 @@ namespace IOL\SSO\v1\Request;
 
 use IOL\SSO\v1\DataSource\File;
 use IOL\SSO\v1\DataType\UUID;
-use IOL\SSO\v1\Entity\User;
+use IOL\SSO\v1\Entity\oldUser;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
@@ -21,15 +21,15 @@ class Authentication
     private const JWT_PRIVATE_KEY = '/private.key';
     private const JWT_ALGORITHM = JWT::ALGORITHM_RS256;
 
-    private static User $user;
+    private static oldUser $user;
     private static ?Session $session = null;
     private static bool $authResult;
 
     #[ArrayShape([
         'success' => 'bool',
-        'object' => 'User|Error',
+        'object' => 'oldUser|Error',
     ])]
-    public static function authenticate(): User
+    public static function authenticate(): oldUser
     {
         $session = self::getSessionFromRequest();
 
@@ -130,7 +130,7 @@ class Authentication
         return $encodedToken->toString();
     }
 
-    public static function getCurrentUser(): ?User
+    public static function getCurrentUser(): ?oldUser
     {
         if (!self::isAuthenticated()) {
             self::authenticate();
