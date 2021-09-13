@@ -69,8 +69,8 @@ class BitMask
          * e.g. 1010 & (1010-1) == 1010 & 1001 = 1000 <-- there is more than 1 bit set in this example
          * e.g. 0100 & (0100-1) == 0100 & 0011 = 0000 <-- only 1 bit is set
          * at last, check if the given value is already present in the allow-list
-         * e.g. setting 0100 twice results in 1000. this means, that now a different value is set, but the actual value
-         *      is not anymore
+         * e.g. setting 0100 twice results in 1000. this means, that now a different value is set,
+         *      but the actual value is not anymore
          */
          if (($value > 0 && ($value & ($value - 1)) === 0) && (($this->allowList & $value) === 0)) {
             $this->allowList += $value;

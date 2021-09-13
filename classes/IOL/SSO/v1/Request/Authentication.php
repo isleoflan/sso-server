@@ -22,7 +22,7 @@ class Authentication
     private const JWT_ALGORITHM = JWT::ALGORITHM_RS256;
 
     private static User $user;
-    private static Session $session;
+    private static ?Session $session = null;
     private static bool $authResult;
 
     #[ArrayShape([
