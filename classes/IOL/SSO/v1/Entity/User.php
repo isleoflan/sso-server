@@ -9,6 +9,7 @@ use IOL\SSO\v1\Exceptions\InvalidObjectValueException;
 use IOL\SSO\v1\ObjectTemplates\UserTemplate;
 use IOL\SSO\v1\Request\APIResponse;
 use IOL\SSO\v1\Request\Session;
+use IOL\SSO\v1\Tokens\IntermediateToken;
 
 class User
 {
@@ -21,7 +22,6 @@ class User
     private ?Date $blocked;
 
     /**
-     * @throws InvalidObjectValueException
      * @throws EmptyObjectException
      */
     public function __construct(?string $id = null, ?string $username = null)
@@ -37,7 +37,6 @@ class User
 
     /**
      * @throws EmptyObjectException
-     * @throws InvalidObjectValueException
      */
     public function loadData(array $values): void
     {
@@ -45,13 +44,12 @@ class User
             throw new EmptyObjectException('User could not be loaded');
         }
 
-        // this line checks, if the database does not return unexpected values
-        new UserTemplate($values);
+        $this->id = $values['id'];
+        $this->username = $values['username'];
+        $this->password = $values['password'];
+        $this->activated = new Date($values['activated']);
+        $this->blocked = new Date($values['blocked']);
 
-        // if the above check does not fail, we feed every field into the object
-        foreach($values as $key => $value){
-            $this->$key = $value;
-        }
     }
 
     public function login(string $password): bool|string
@@ -61,7 +59,7 @@ class User
                 if (!$this->isBlocked()) {
                     // user has entered correct email/password combination and also activated their account
                     // create a new IntermediateToken for the user, assigned to the App, that requested it
-                    $session = new Session(user: $this);
+                    $token = new IntermediateToken(user: $this);
 
                     // and return it
                     return $session->create();
