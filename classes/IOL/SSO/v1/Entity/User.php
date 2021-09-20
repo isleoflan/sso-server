@@ -4,7 +4,7 @@ namespace IOL\SSO\v1\Entity;
 
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
-use IOL\SSO\v1\Exceptions\EmptyObjectException;
+use IOL\SSO\v1\Exceptions\EncryptionException;
 use IOL\SSO\v1\Exceptions\InvalidObjectValueException;
 use IOL\SSO\v1\ObjectTemplates\UserTemplate;
 use IOL\SSO\v1\Request\APIResponse;
@@ -22,7 +22,7 @@ class User
     private ?Date $blocked;
 
     /**
-     * @throws EmptyObjectException
+     * @throws EncryptionException
      */
     public function __construct(?string $id = null, ?string $username = null)
     {
@@ -36,19 +36,19 @@ class User
     }
 
     /**
-     * @throws EmptyObjectException
+     * @throws EncryptionException
      */
     public function loadData(array $values): void
     {
         if(count($values) === 0){
-            throw new EmptyObjectException('User could not be loaded');
+            throw new EncryptionException('User could not be loaded');
         }
 
         $this->id = $values['id'];
         $this->username = $values['username'];
         $this->password = $values['password'];
-        $this->activated = new Date($values['activated']);
-        $this->blocked = new Date($values['blocked']);
+        $this->activated = is_null($values['activated']) ? null :new Date($values['activated']);
+        $this->blocked = is_null($values['blocked']) ? null : new Date($values['blocked']);
 
     }
 
@@ -90,6 +90,16 @@ class User
     {
         return !is_null($this->blocked);
     }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+
 
 
 }

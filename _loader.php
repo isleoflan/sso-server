@@ -16,7 +16,7 @@
         $className = str_replace('\\', '/', $className);
         $filePath = false;
 
-        if (str_contains($className, 'IOL\SSO')) {
+        if (str_contains($className, 'IOL/SSO')) {
             $filePath = $basePath.'/classes/'.$className.'.php';
         }
         if ($filePath && file_exists($filePath)) {

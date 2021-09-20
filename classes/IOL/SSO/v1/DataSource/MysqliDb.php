@@ -727,7 +727,7 @@ class MysqliDb
      *
      * @return array|MysqliDb Contains the returned rows from the select query.
      */
-    public function get($tableName, $numRows = null, $columns = '*')
+    public function get(string $tableName, int|array|null $numRows = null, string $columns = '*')
     {
         if (empty($columns)) {
             $columns = '*';

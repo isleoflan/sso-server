@@ -11,11 +11,7 @@ class Environment
 
     #[NoReturn] protected function __construct()
     {
-        $basePath = __DIR__;
-        for ($returnDirs = 0; $returnDirs < 4; $returnDirs++) {
-            $basePath = substr($basePath, 0, strrpos($basePath, '/'));
-        }
-        $dotenv = Dotenv::createImmutable($basePath);
+        $dotenv = Dotenv::createImmutable(File::getBasePath());
         $dotenv->load();
     }
 

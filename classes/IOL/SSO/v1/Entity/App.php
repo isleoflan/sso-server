@@ -5,7 +5,7 @@
     namespace IOL\SSO\v1\Entity;
 
     use IOL\SSO\v1\DataSource\Database;
-    use IOL\SSO\v1\Exceptions\EmptyObjectException;
+    use IOL\SSO\v1\Exceptions\EncryptionException;
 
     class App
     {
@@ -17,7 +17,7 @@
         private string $baseUrl;
 
         /**
-         * @throws \IOL\SSO\v1\Exceptions\EmptyObjectException
+         * @throws \IOL\SSO\v1\Exceptions\EncryptionException
          */
         public function __construct(?string $id = null)
         {
@@ -29,7 +29,7 @@
         private function loadData(array $values){
 
             if(count($values) === 0){
-                throw new EmptyObjectException('App could not be loaded');
+                throw new EncryptionException('App could not be loaded');
             }
 
             $this->id = $values['id'];
@@ -37,4 +37,13 @@
             $this->description = $values['description'];
             $this->baseUrl = $values['base_url'];
         }
+
+        /**
+         * @return string
+         */
+        public function getId(): string
+        {
+            return $this->id;
+        }
+
     }

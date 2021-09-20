@@ -11,6 +11,8 @@
   ],
   "require": {
     "nowakowskir/php-jwt": "^2.0",
-    "vlucas/phpdotenv": "^5.3"
+    "vlucas/phpdotenv": "^5.3",
+    "ext-openssl": "*",
+    "ext-bcmath": "*"
   }
 }
