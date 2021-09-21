@@ -51,6 +51,5 @@ Thumbs.db
 /composer.phar
 /.env
 /dist/test.php
-/.env
-/intermediateTokenKey.pem
-/.env
+/intermediatePrivate.pem
+/intermediatePublic.pem
