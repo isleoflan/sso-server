@@ -50,3 +50,7 @@ Thumbs.db
 /composer.lock
 /composer.phar
 /.env
+/dist/test.php
+/.env
+/intermediateTokenKey.pem
+/.env

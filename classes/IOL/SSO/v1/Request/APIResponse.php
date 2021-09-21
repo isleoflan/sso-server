@@ -62,7 +62,7 @@
          * this should be set to false in productive environments
          * set this to true, if you need it for debugging
          */
-        private bool $saveRequest = true;
+        private bool $saveRequest = false;
 
         /**
          * @var bool $saveResponse
@@ -139,7 +139,9 @@
         protected function __construct()
         {
             $this->startTime = new Date('u');
-            $this->setId(UUID::newId('api_requests'));
+            if($this->isSaveRequest()) {
+                $this->setId(UUID::newId('api_requests'));
+            }
             $this->sendCORSHeader();
         }
 
@@ -209,7 +211,10 @@
             if ($this->responseSent) {
                 die;
             }
-            $response = ['data' => null, 'rId' => $this->getId(), 'v' => $this->getAPIVersion()];
+            $response = ['data' => null, 'v' => $this->getAPIVersion()];
+            if($this->isSaveRequest()){
+                $response['rId'] = $this->getId();
+            }
 
             $returnCode = $this->getResponseCode();
 

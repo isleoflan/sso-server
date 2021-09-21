@@ -5,7 +5,8 @@
     namespace IOL\SSO\v1\Entity;
 
     use IOL\SSO\v1\DataSource\Database;
-    use IOL\SSO\v1\Exceptions\EncryptionException;
+    use IOL\SSO\v1\Exceptions\NotFoundException;
+    use IOL\SSO\v1\Request\APIResponse;
 
     class App
     {
@@ -17,7 +18,7 @@
         private string $baseUrl;
 
         /**
-         * @throws \IOL\SSO\v1\Exceptions\EncryptionException
+         * @throws NotFoundException
          */
         public function __construct(?string $id = null)
         {
@@ -26,10 +27,21 @@
             }
         }
 
+        /**
+         * @throws NotFoundException
+         */
+        public static function getCurrent(): App
+        {
+            return new App(APIResponse::getRequestHeader('IOL-App-ID'));
+        }
+
+        /**
+         * @throws NotFoundException
+         */
         private function loadData(array $values){
 
             if(count($values) === 0){
-                throw new EncryptionException('App could not be loaded');
+                throw new NotFoundException('App could not be loaded');
             }
 
             $this->id = $values['id'];
