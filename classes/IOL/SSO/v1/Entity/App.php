@@ -12,6 +12,8 @@
     {
         public const DB_TABLE = 'app';
 
+        public const HEADER_NAME = 'IOL-App-ID';
+
         private string $id;
         private string $title;
         private string $description;
@@ -32,15 +34,15 @@
          */
         public static function getCurrent(): App
         {
-            return new App(APIResponse::getRequestHeader('IOL-App-ID'));
+            return new App(APIResponse::getRequestHeader(self::HEADER_NAME));
         }
 
         /**
          * @throws NotFoundException
          */
-        private function loadData(array $values){
+        private function loadData(array|false $values){
 
-            if(count($values) === 0){
+            if(!$values || count($values) === 0){
                 throw new NotFoundException('App could not be loaded');
             }
 

@@ -45,7 +45,7 @@ class Error
 
         if (isset($lookupTable[$this->errorCode])) {
             $this->message = $this->message ?? $lookupTable[$this->errorCode]['message'];
-            $this->httpCode = $this->httpCode ?? $lookupTable[$this->errorCode]['httpCode'];
+            $this->httpCode = $this->httpCode ?? $lookupTable[$this->errorCode]['errorCode'];
         }
     }
 }

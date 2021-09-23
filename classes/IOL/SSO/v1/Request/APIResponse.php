@@ -7,8 +7,10 @@
     use IOL\SSO\v1\DataSource\Database;
     use IOL\SSO\v1\DataType\Date;
     use IOL\SSO\v1\DataType\UUID;
+    use IOL\SSO\v1\Entity\App;
     use IOL\SSO\v1\Entity\oldUser;
     use IOL\SSO\v1\BitMasks\RequestMethod;
+    use IOL\SSO\v1\Exceptions\NotFoundException;
     use JetBrains\PhpStorm\ArrayShape;
     use JetBrains\PhpStorm\NoReturn;
 
@@ -175,14 +177,15 @@
 
         public function check(): ?oldUser
         {
+            $this->checkForAppHeader();
             $this->checkForOptionsMethod();
 
             if (!$this->getAllowedRequestMethods()->isAllowed(self::getRequestMethod())) {
                 $this->addError(100004)->render();
             }
 
-            $authResult = Authentication::authenticate();
             if ($this->authRequired) {
+                $authResult = Authentication::authenticate();
                 if (!$authResult['success']) {
                     $this->addError($authResult['object'])->render();
                 }
@@ -496,6 +499,23 @@
         private function sendCORSHeader(): void
         {
             header('Access-Control-Allow-Origin: '.($_SERVER['HTTP_ORIGIN'] ?? '*')); // TODO: sane CORS
+        }
+
+        /**
+         * @return bool
+         */
+        private function checkForAppHeader(): bool
+        {
+            if(!is_null(self::getRequestHeader(App::HEADER_NAME))){
+                APIResponse::getInstance()->addError(999106)->render();
+            } else {
+                try {
+                    new App(self::getRequestHeader(App::HEADER_NAME));
+                } catch(NotFoundException){
+                    APIResponse::getInstance()->addError(999107)->render();
+                }
+                return true;
+            }
         }
 
     }

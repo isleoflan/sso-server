@@ -17,6 +17,22 @@
   },
 
 
+  "100472": {
+    "message": "Wrong username or password ",
+    "errorCode": 403
+  },
+
+  "100473": {
+    "message": "E-Mail address has not been verified yet. A new verification e-mail has been triggered.",
+    "errorCode": 403
+  },
+
+  "100474": {
+    "message": "This user has been blocked",
+    "errorCode": 403
+  },
+
+
   "101001": {
     "message": "Usage of disallowed Enum value",
     "errorCode": 501
@@ -42,6 +58,14 @@
   "999105": {
     "message": "Cannot read malformed JSON",
     "errorCode": 503
+  },
+  "999106": {
+    "message": "Required App ID Header missing",
+    "errorCode": 403
+  },
+  "999107": {
+    "message": "App ID invalid",
+    "errorCode": 403
   },
 
 

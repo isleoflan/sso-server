@@ -6,6 +6,7 @@ use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\Exceptions\EncryptionException;
 use IOL\SSO\v1\Exceptions\InvalidObjectValueException;
+use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\ObjectTemplates\UserTemplate;
 use IOL\SSO\v1\Request\APIResponse;
 use IOL\SSO\v1\Request\Session;
@@ -22,26 +23,26 @@ class User
     private ?Date $blocked;
 
     /**
-     * @throws EncryptionException
+     * @throws NotFoundException
      */
     public function __construct(?string $id = null, ?string $username = null)
     {
         if(!is_null($id)){
-            $this->loadData(Database::getRow('id',$id,self::DB_TABLE));
+            $this->loadData(Database::getRow('id', $id,self::DB_TABLE));
         } elseif(!is_null($username)){
-            $this->loadData(Database::getRow('username',$username,self::DB_TABLE));
+            $this->loadData(Database::getRow('username', $username,self::DB_TABLE));
         }
 
         // of course, we still can instantiate an empty object, for instance to create a new user
     }
 
     /**
-     * @throws EncryptionException
+     * @throws NotFoundException
      */
-    public function loadData(array $values): void
+    public function loadData(array|false $values): void
     {
-        if(count($values) === 0){
-            throw new EncryptionException('User could not be loaded');
+        if(!$values || count($values) === 0){
+            throw new NotFoundException('User could not be loaded');
         }
 
         $this->id = $values['id'];
@@ -52,17 +53,14 @@ class User
 
     }
 
-    public function login(string $password): bool|string
+    public function login(string $password): bool
     {
         if (password_verify($password, $this->password)) {
             if ($this->isActivated()) {
                 if (!$this->isBlocked()) {
                     // user has entered correct email/password combination and also activated their account
                     // create a new IntermediateToken for the user, assigned to the App, that requested it
-                    $token = new IntermediateToken(user: $this);
-
-                    // and return it
-                    return $session->create();
+                    return true;
                 }
                 // oldUser has been blocked, throw respective error
                 APIResponse::getInstance()->addError(100474)->render();
@@ -79,7 +77,7 @@ class User
     }
     // the email address, the user using to try to log in, is not registered / can not be found in DB
     // throw error
-    // APIResponse::getInstance()->addError(100472)->render();
+    //APIResponse::getInstance()->addError(100472)->render();
 
     private function isActivated(): bool
     {
