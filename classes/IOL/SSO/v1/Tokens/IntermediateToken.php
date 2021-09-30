@@ -100,16 +100,21 @@
             $this->decryptionKey = file_get_contents($this->decryptionKeyPath);
         }
 
+
         /**
-         * @throws EncryptionException
+         * @throws \IOL\SSO\v1\Exceptions\EncryptionException
          */
         public function createNew(App $app, User $user): string
         {
             $token = $this->generateToken($app, $user);
 
             $expiration = new Date('now');
-            $expiration->add(new \DateInterval('PT'.self::TOKEN_LIFETIME.'S'));
 
+            try {
+                $expiration->add(new \DateInterval('PT'.self::TOKEN_LIFETIME.'S'));
+            } catch(\Exception){
+                // do nothing
+            }
             $database = Database::getInstance();
             $database->insert(self::DB_TABLE, [
                 'app_id' => $app->getId(),
@@ -158,11 +163,11 @@
         }
 
         /**
-         * @throws InvalidValueException
+         * @throws InvalidValueException|\IOL\SSO\v1\Exceptions\EncryptionException
          */
         public function checkToken(string $token): array
         {
-            list($token, $checksum) = explode('*', $token);
+            [$token, $checksum] = explode('*', $token);
 
             if(base64_encode(base64_decode($token)) !== $token){
                 throw new InvalidValueException('Provided token is not of any valid format');
@@ -175,7 +180,7 @@
             }
 
             $decryptedData = '';
-            $encryptedData = str_split(base64_decode($token), $this->encryptionBlockSize);
+            $encryptedData = str_split(base64_decode($token), $this->decryptionBlockSize);
 
             foreach($encryptedData as $dataChunk){
                 $decryptedChunk = '';

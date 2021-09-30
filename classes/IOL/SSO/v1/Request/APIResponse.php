@@ -506,7 +506,7 @@
          */
         private function checkForAppHeader(): bool
         {
-            if(!is_null(self::getRequestHeader(App::HEADER_NAME))){
+            if(is_null(self::getRequestHeader(App::HEADER_NAME))){
                 APIResponse::getInstance()->addError(999106)->render();
             } else {
                 try {
@@ -514,8 +514,8 @@
                 } catch(NotFoundException){
                     APIResponse::getInstance()->addError(999107)->render();
                 }
-                return true;
             }
+            return true;
         }
 
     }

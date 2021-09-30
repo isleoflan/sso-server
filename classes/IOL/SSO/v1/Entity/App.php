@@ -12,7 +12,7 @@
     {
         public const DB_TABLE = 'app';
 
-        public const HEADER_NAME = 'IOL-App-ID';
+        public const HEADER_NAME = 'Iol-App-Token';
 
         private string $id;
         private string $title;
@@ -29,12 +29,13 @@
             }
         }
 
-        /**
-         * @throws NotFoundException
-         */
         public static function getCurrent(): App
         {
-            return new App(APIResponse::getRequestHeader(self::HEADER_NAME));
+            try {
+                return new App(APIResponse::getRequestHeader(self::HEADER_NAME));
+            } catch(NotFoundException){
+                APIResponse::getInstance()->addError(999107)->render();
+            }
         }
 
         /**
