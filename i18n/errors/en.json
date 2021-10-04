@@ -39,6 +39,13 @@
   },
 
 
+
+  "202001": {
+    "message": "The provided token is of an invalid format",
+    "errorCode": 400
+  },
+
+
   "999101": {
     "message": "General Server Error",
     "errorCode": 500
@@ -69,8 +76,14 @@
   },
 
 
+
   "999999": {
     "message": "Endpoint not found",
     "errorCode": 404
+  },
+
+  "0": {
+    "message": "Undefined error",
+    "errorCode": 500
   }
 }

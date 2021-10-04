@@ -1,6 +1,7 @@
 <?php
     // logs in the user and returns an intermediate key
 
+    use IOL\SSO\v1\BitMasks\RequestMethod;
     use IOL\SSO\v1\Entity\App;
     use IOL\SSO\v1\Entity\User;
     use IOL\SSO\v1\Exceptions\NotFoundException;
@@ -11,7 +12,7 @@
     $response = APIResponse::getInstance();
 
     $response->setAllowedRequestMethods(
-        new \IOL\SSO\v1\BitMasks\RequestMethod(\IOL\SSO\v1\BitMasks\RequestMethod::POST)
+        new RequestMethod(RequestMethod::POST)
     );
     $response->needsAuth(false);
 
@@ -20,13 +21,13 @@
                                            [
                                                'name'      => 'username',
                                                'types'     => ['string'],
-                                               'required'  => false,
+                                               'required'  => true,
                                                'errorCode' => 0,
                                            ],
                                            [
                                                'name'      => 'password',
                                                'types'     => ['string'],
-                                               'required'  => false,
+                                               'required'  => true,
                                                'errorCode' => 0,
                                            ],
                                        ]);

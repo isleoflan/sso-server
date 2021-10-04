@@ -116,7 +116,7 @@
                 // do nothing
             }
             $database = Database::getInstance();
-            $database->insert(self::DB_TABLE, [
+            $database->replace(self::DB_TABLE, [
                 'app_id' => $app->getId(),
                 'user_id' => $user->getId(),
                 'token' => $token,
@@ -163,7 +163,7 @@
         }
 
         /**
-         * @throws InvalidValueException|\IOL\SSO\v1\Exceptions\EncryptionException
+         * @throws InvalidValueException|EncryptionException
          */
         public function checkToken(string $token): array
         {
