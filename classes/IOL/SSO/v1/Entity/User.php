@@ -4,13 +4,10 @@ namespace IOL\SSO\v1\Entity;
 
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
-use IOL\SSO\v1\Exceptions\EncryptionException;
-use IOL\SSO\v1\Exceptions\InvalidObjectValueException;
+use IOL\SSO\v1\DataType\UUID;
+use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
-use IOL\SSO\v1\ObjectTemplates\UserTemplate;
 use IOL\SSO\v1\Request\APIResponse;
-use IOL\SSO\v1\Request\Session;
-use IOL\SSO\v1\Tokens\IntermediateToken;
 
 class User
 {
@@ -24,10 +21,14 @@ class User
 
     /**
      * @throws NotFoundException
+     * @throws \IOL\SSO\v1\Exceptions\InvalidValueException
      */
     public function __construct(?string $id = null, ?string $username = null)
     {
         if(!is_null($id)){
+            if(!UUID::isValid($id)){
+                throw new InvalidValueException('Invalid Login Request ID');
+            }
             $this->loadData(Database::getRow('id', $id,self::DB_TABLE));
         } elseif(!is_null($username)){
             $this->loadData(Database::getRow('username', $username,self::DB_TABLE));

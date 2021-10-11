@@ -4,6 +4,7 @@
 
     use IOL\SSO\v1\DataSource\Database;
     use IOL\SSO\v1\DataSource\File;
+    use IOL\SSO\v1\DataType\Base64;
     use IOL\SSO\v1\DataType\Date;
     use IOL\SSO\v1\Entity\App;
     use IOL\SSO\v1\Entity\User;
@@ -146,11 +147,11 @@
                 $encryptedData .= $encryptedChunk;
             }
 
-            $token = base64_encode($encryptedData);
+            $token = Base64::encode($encryptedData);
 
             $checksum = $this->calculateChecksum($token);
 
-            return $token.'*'.str_replace('=','',base64_encode(dechex($checksum)));
+            return $token.'*'.str_replace('=','',Base64::encode(dechex($checksum)));
         }
 
         private function calculateChecksum(string $token): int
@@ -169,18 +170,18 @@
         {
             [$token, $checksum] = explode('*', $token);
 
-            if(base64_encode(base64_decode($token)) !== $token){
+            if(Base64::encode(Base64::decode($token)) !== $token){
                 throw new InvalidValueException('Provided token is not of any valid format');
             }
 
-            $checksum = hexdec(base64_decode($checksum));
+            $checksum = hexdec(Base64::decode($checksum));
 
             if($this->calculateChecksum($token) !== $checksum){
                 throw new InvalidValueException('Provided checksum is not valid');
             }
 
             $decryptedData = '';
-            $encryptedData = str_split(base64_decode($token), $this->decryptionBlockSize);
+            $encryptedData = str_split(Base64::decode($token), $this->decryptionBlockSize);
 
             foreach($encryptedData as $dataChunk){
                 $decryptedChunk = '';

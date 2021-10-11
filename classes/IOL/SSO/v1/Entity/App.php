@@ -5,6 +5,8 @@
     namespace IOL\SSO\v1\Entity;
 
     use IOL\SSO\v1\DataSource\Database;
+    use IOL\SSO\v1\DataType\UUID;
+    use IOL\SSO\v1\Exceptions\InvalidValueException;
     use IOL\SSO\v1\Exceptions\NotFoundException;
     use IOL\SSO\v1\Request\APIResponse;
 
@@ -21,10 +23,14 @@
 
         /**
          * @throws NotFoundException
+         * @throws \IOL\SSO\v1\Exceptions\InvalidValueException
          */
         public function __construct(?string $id = null)
         {
             if(!is_null($id)){
+                if(!UUID::isValid($id)){
+                    throw new InvalidValueException('Invalid App-ID');
+                }
                 $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
             }
         }
@@ -59,6 +65,11 @@
         public function getId(): string
         {
             return $this->id;
+        }
+
+        public function checkRedirectURL(string $redirectURL) : bool
+        {
+            return str_starts_with(str_replace(['http://','https://'], '', $redirectURL), str_replace(['http://','https://'], '', $this->baseUrl));
         }
 
     }

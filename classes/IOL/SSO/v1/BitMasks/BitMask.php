@@ -87,4 +87,9 @@ class BitMask
     {
         return ($this->allowList & $value) === $value;
     }
+
+    public function getIntegerValue() : int
+    {
+        return $this->allowList;
+    }
 }

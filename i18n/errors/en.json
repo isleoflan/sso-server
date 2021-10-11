@@ -40,6 +40,17 @@
 
 
 
+  "102001": {
+    "message": "Invalid redirection URL",
+    "errorCode": 403
+  },
+  "102002": {
+    "message": "Login Request invalid",
+    "errorCode": 403
+  },
+
+
+
   "202001": {
     "message": "The provided token is of an invalid format",
     "errorCode": 400
@@ -59,7 +70,7 @@
     "errorCode": 503
   },
   "999104": {
-    "message": "The server threw an unrecoverable error",
+    "message": "The server threw an unrecoverable error. Please try again later",
     "errorCode": 503
   },
   "999105": {
