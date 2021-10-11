@@ -66,5 +66,7 @@
             APIResponse::getInstance()->addError(999104)->render();
         }
 
-        APIResponse::getInstance()->addData('token', $token);
+
+        $redirectURL = $loginRequest->redeem();
+        APIResponse::getInstance()->addData('redirect', $redirectURL . $token);
     }

@@ -65,4 +65,12 @@
 
             return $this->id;
         }
+
+        public function redeem(): string
+        {
+            $database = Database::getInstance();
+            $database->where('id', $this->id);
+            $database->delete(self::DB_TABLE);
+            return $this->redirectURL;
+        }
     }

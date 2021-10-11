@@ -60,7 +60,10 @@ class User
             if ($this->isActivated()) {
                 if (!$this->isBlocked()) {
                     // user has entered correct email/password combination and also activated their account
-                    // create a new IntermediateToken for the user, assigned to the App, that requested it
+                    // create a new global session for the user
+
+
+                    // and return that the login succeeded
                     return true;
                 }
                 // oldUser has been blocked, throw respective error
