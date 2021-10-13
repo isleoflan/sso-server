@@ -73,4 +73,9 @@
             $database->delete(self::DB_TABLE);
             return $this->redirectURL;
         }
+
+        public function getInfo(): array
+        {
+            return $this->app->jsonSerialize();
+        }
     }

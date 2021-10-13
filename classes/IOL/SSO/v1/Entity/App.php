@@ -10,7 +10,7 @@
     use IOL\SSO\v1\Exceptions\NotFoundException;
     use IOL\SSO\v1\Request\APIResponse;
 
-    class App
+    class App implements \JsonSerializable
     {
         public const DB_TABLE = 'app';
 
@@ -19,6 +19,7 @@
         private string $id;
         private string $title;
         private string $description;
+        private string $icon; // TODO
         private string $baseUrl;
 
         /**
@@ -72,4 +73,14 @@
             return str_starts_with(str_replace(['http://','https://'], '', $redirectURL), str_replace(['http://','https://'], '', $this->baseUrl));
         }
 
+        public function jsonSerialize(): array
+        {
+            return [
+                'id' => $this->id,
+                'title' => $this->title,
+                'description' => $this->description,
+                'baseUrl' => $this->baseUrl,
+                'icon' => ''
+            ];
+        }
     }

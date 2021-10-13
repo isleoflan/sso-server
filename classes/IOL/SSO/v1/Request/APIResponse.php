@@ -386,7 +386,7 @@
             if (self::getRequestMethod() === RequestMethod::OPTIONS) {
                 $methods = implode(',', array_values($this->getAllowedRequestMethods()->getValues()));
                 http_response_code(204);
-                header('Allow: OPTIONS'.$methods);
+                header('Allow: OPTIONS,'.$methods);
                 header('Content-Type: '.$this->returnType.'; charset=utf-8');
                 $this->sendCORSHeader();
                 $this->responseSent = true;
