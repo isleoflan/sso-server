@@ -9,19 +9,21 @@ $response->setAllowedRequestMethods(
     new RequestMethod(RequestMethod::GET)
 );
 $response->needsAuth(false);
+$response->isSsoFrontendOnly(true);
+
 
 $response->check();
 $input = $response->getRequestData([
     [
-        'name'      => 'requestID',
+        'name'      => 'loginRequestId',
         'types'     => ['string'],
-        'required'  => false,
+        'required'  => true,
         'errorCode' => 102002,
     ],
 ]);
 
 try {
-    $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest($input['requestID']);
+    $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest($input['loginRequestId']);
 } catch (\IOL\SSO\v1\Exceptions\IOLException $e) {
     $response->addError(102002)->render();
 }
