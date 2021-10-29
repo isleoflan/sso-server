@@ -1,4 +1,4 @@
-<?php
+ <?php
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Request\APIResponse;

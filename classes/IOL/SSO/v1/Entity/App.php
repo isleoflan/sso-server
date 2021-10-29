@@ -73,6 +73,15 @@
             return str_starts_with(str_replace(['http://','https://'], '', $redirectURL), str_replace(['http://','https://'], '', $this->baseUrl));
         }
 
+        /**
+         * @param string $id
+         */
+        public function setId(string $id): void
+        {
+            $this->id = $id;
+        }
+
+
         public function jsonSerialize(): array
         {
             return [
