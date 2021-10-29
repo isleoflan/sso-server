@@ -49,6 +49,12 @@
         private bool $authRequired = true;
 
         /**
+         * @var bool $ssoFrontendOnly
+         *
+         */
+        private bool $ssoFrontendOnly = false;
+
+        /**
          * @var string $returnType
          *
          * the here set value is used in the "Content-Type" header.
@@ -498,6 +504,8 @@
 
         private function sendCORSHeader(): void
         {
+
+            // TODO if ssofrontendonly is set, only allow sso.isleoflan.ch
             header('Access-Control-Allow-Origin: '.($_SERVER['HTTP_ORIGIN'] ?? '*')); // TODO: sane CORS
         }
 
@@ -517,5 +525,21 @@
             }
             return true;
         }
+
+
+        /**
+         * @param bool|null $ssoFrontendOnly
+         *
+         * @return bool
+         */
+        public function isSsoFrontendOnly(?bool $ssoFrontendOnly = null): bool
+        {
+            if(!is_null($ssoFrontendOnly)) {
+                $this->ssoFrontendOnly = $ssoFrontendOnly;
+            }
+            return $this->ssoFrontendOnly;
+        }
+
+
 
     }

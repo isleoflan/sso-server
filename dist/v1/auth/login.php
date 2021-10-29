@@ -16,6 +16,7 @@
         new RequestMethod(RequestMethod::POST)
     );
     $response->needsAuth(false);
+    $response->isSSOFrontendOnly(true);
 
     $response->check();
     $input = $response->getRequestData([
