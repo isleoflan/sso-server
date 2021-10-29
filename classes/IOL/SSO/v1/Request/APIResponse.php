@@ -183,7 +183,9 @@
 
         public function check(): ?oldUser
         {
-            $this->checkForAppHeader();
+            if(!$this->isSsoFrontendOnly()) {
+                $this->checkForAppHeader();
+            }
             $this->checkForOptionsMethod();
 
             if (!$this->getAllowedRequestMethods()->isAllowed(self::getRequestMethod())) {
