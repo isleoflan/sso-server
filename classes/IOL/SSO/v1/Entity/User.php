@@ -8,6 +8,7 @@ use IOL\SSO\v1\DataType\UUID;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Request\APIResponse;
+use IOL\SSO\v1\Session\GlobalSession;
 
 class User
 {
@@ -18,6 +19,8 @@ class User
     private string $password;
     private ?Date $activated;
     private ?Date $blocked;
+
+    private ?GlobalSession $globalSession = null;
 
     /**
      * @throws NotFoundException
@@ -61,6 +64,9 @@ class User
                 if (!$this->isBlocked()) {
                     // user has entered correct email/password combination and also activated their account
                     // create a new global session for the user
+                    $globalSession = new GlobalSession();
+                    $globalSession->createNew($this);
+                    $this->globalSession = $globalSession;
 
 
                     // and return that the login succeeded
@@ -99,6 +105,18 @@ class User
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * @return GlobalSession|null
+     * @throws NotFoundException
+     */
+    public function getGlobalSession(): ?GlobalSession
+    {
+        if(is_null($this->globalSession)) {
+            throw new NotFoundException('No Global Session has been defined yet.');
+        }
+        return $this->globalSession;
     }
 
 

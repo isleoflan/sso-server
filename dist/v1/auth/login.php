@@ -21,33 +21,33 @@
     $response->check();
     $input = $response->getRequestData([
                                            [
-                                               'name'      => 'loginRequest',
+                                               'name'      => 'loginRequestId',
                                                'types'     => ['string'],
                                                'required'  => true,
-                                               'errorCode' => 0,
+                                               'errorCode' => 102002,
                                            ],
                                            [
                                                'name'      => 'username',
                                                'types'     => ['string'],
-                                               'required'  => true,
+                                               'required'  => false,
                                                'errorCode' => 0,
                                            ],
                                            [
                                                'name'      => 'password',
                                                'types'     => ['string'],
-                                               'required'  => true,
+                                               'required'  => false,
                                                'errorCode' => 0,
                                            ],
                                        ]);
 
     try {
-        $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest($input['loginRequest']);
+        $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest($input['loginRequestId']);
     } catch (NotFoundException|InvalidValueException $e){
         APIResponse::getInstance()->addError(102002)->render();
     }
 
 
-    $app = App::getCurrent();
+    $app = $loginRequest->getApp();
 
     try {
         $user = new User(username: $input['username']);
@@ -70,4 +70,7 @@
 
         $redirectURL = $loginRequest->redeem();
         APIResponse::getInstance()->addData('redirect', $redirectURL . $token);
+        APIResponse::getInstance()->addData('globalSessionId',$user->getGlobalSession()->getId());
+    } else {
+        APIResponse::getInstance()->addError(100472)->render();
     }
