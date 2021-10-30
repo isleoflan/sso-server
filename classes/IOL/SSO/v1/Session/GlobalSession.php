@@ -12,6 +12,8 @@ use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 
 class GlobalSession
 {
@@ -166,7 +168,7 @@ class GlobalSession
         $database = Database::getInstance();
         $database->where('id', $this->id);
         $database->update(
-            'sessions',
+            'global_session',
             [
                 'expiration' => $now->sqldatetime(),
             ]
@@ -176,6 +178,15 @@ class GlobalSession
     public function getId(): string
     {
         return $this->id;
+    }
+
+    #[Pure] #[ArrayShape(['username' => "string", 'avatar' => "string", 'email' => "string"])] public function getInfo(): array
+    {
+        return [
+            'username'  => $this->user->getUsername(),
+            'avatar'    => '', // TODO: link account api / implement avatar & CDN service
+            'email'     => 'tbd@test.ch', // TODO: link account api
+        ];
     }
 
 }
