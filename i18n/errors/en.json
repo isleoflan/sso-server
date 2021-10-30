@@ -18,7 +18,7 @@
 
 
   "100472": {
-    "message": "Wrong username or password ",
+    "message": "Wrong username or password",
     "errorCode": 403
   },
 
@@ -46,6 +46,16 @@
   },
   "102002": {
     "message": "Login Request invalid",
+    "errorCode": 403
+  },
+
+
+  "103001": {
+    "message": "Invalid Redirect URL",
+    "errorCode": 403
+  },
+  "103002": {
+    "message": "Invalid Scope",
     "errorCode": 403
   },
 

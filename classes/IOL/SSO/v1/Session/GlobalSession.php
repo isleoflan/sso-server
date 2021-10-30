@@ -15,7 +15,7 @@ use IOL\SSO\v1\Exceptions\NotFoundException;
 
 class GlobalSession
 {
-    public const DB_TABLE = 'global_sessions';
+    public const DB_TABLE = 'global_session';
 
     /**
      * Defines after which amount of seconds, without being renewed, the session is being invalidated.
@@ -50,7 +50,7 @@ class GlobalSession
     /**
      * @throws InvalidValueException
      */
-    public function __construct(?string $id)
+    public function __construct(?string $id = null)
     {
         if(!is_null($id)){
             if(!UUID::isValid($id)){
@@ -77,18 +77,26 @@ class GlobalSession
 
     public function createNew(User $user) : string
     {
+        $database = Database::getInstance();
+
         $this->user = $user;
+
+        $database->where('user_id', $this->user->getId());
+        foreach($database->get(self::DB_TABLE) as $existingGlobalSession){
+            $existingGlobalSession = new GlobalSession($existingGlobalSession['id']);
+            $existingGlobalSession->revoke();
+        }
+
         $this->created = new Date('now');
-        $this->expiration = new Date('now');
+        $this->expiration = clone $this->created;
         $this->expiration->add(new \DateInterval('PT'.self::EXPIRATION_INTERVAL.'S'));
         $this->id = UUID::newId(self::DB_TABLE);
 
-        $database = Database::getInstance();
         $database->insert(self::DB_TABLE, [
             'id'            => $this->id,
             'user_id'       => $this->user->getId(),
             'created'       => $this->created->format(Date::DATETIME_FORMAT_MICRO),
-            'scope'         => $this->expiration->format(Date::DATETIME_FORMAT_MICRO),
+            'expiration'    => $this->expiration->format(Date::DATETIME_FORMAT_MICRO),
         ]);
 
         return $this->id;
@@ -138,7 +146,7 @@ class GlobalSession
         $database = Database::getInstance();
         $database->where('id', $this->id);
         $database->update(
-            'sessions',
+            'global_session',
             [
                 'expiration' => $now->sqldatetime(),
             ]
@@ -163,6 +171,11 @@ class GlobalSession
                 'expiration' => $now->sqldatetime(),
             ]
         );
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
 }

@@ -17,13 +17,13 @@
                                                'name'      => 'redirectURL',
                                                'types'     => ['string'],
                                                'required'  => true,
-                                               'errorCode' => 0,
+                                               'errorCode' => 103001,
                                            ],
                                            [
                                                'name'      => 'scope',
                                                'types'     => ['integer'],
                                                'required'  => true,
-                                               'errorCode' => 0,
+                                               'errorCode' => 103002,
                                            ],
                                        ]);
 

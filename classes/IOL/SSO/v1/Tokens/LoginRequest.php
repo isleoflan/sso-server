@@ -78,4 +78,9 @@
         {
             return $this->app->jsonSerialize();
         }
+
+        public function getApp(): App
+        {
+            return $this->app;
+        }
     }
