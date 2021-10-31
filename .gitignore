@@ -46,10 +46,10 @@ Thumbs.db
 *.mov
 *.wmv
 
-/vendor/
-/composer.lock
-/composer.phar
-/.env
-/dist/test.php
-/intermediatePublic.pem
-/intermediatePrivate.pem
+vendor/
+composer.lock
+composer.phar
+.env
+dist/test.php
+intermediatePublic.pem
+intermediatePrivate.pem

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.19
+    container_name: sso-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www/sso
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/nginx/certs:/etc/nginx/certs
+    depends_on:
+      - sso-php
+
+  # PHP Service
+  php:
+    container_name: sso-php
+    build: ./.docker/php
+    working_dir: /var/www/sso
+    volumes:
+      - ./src:/var/www/sso
+
+      # xDebug settings
+      - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    depends_on:
+      - sso-db
+
+  db:
+    container_name: sso-db
+    image: mariadb:10.3
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./.docker/db/conf.d:/etc/mysql/conf.d
+      - ./.docker/db/mysql-dump:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+
+volumes:
+  data01:
+    driver: local

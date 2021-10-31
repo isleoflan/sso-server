@@ -15,6 +15,6 @@ suites:
         modules:
             enabled:
                 - REST:
-                      url: https://api.sso.isleoflan.ch/v1/
+                      url: https://localhost/v1/
                       depends: PhpBrowser
                       part: json

@@ -9,7 +9,7 @@ class SsoCest
     // tests
     public function signInSuccessful(ApiTester $I)
     {
-        $I->sendPost('user/login', json_encode([
+        $I->sendPost('auth/login', json_encode([
             'username' => 'stui',
             'password' => '123'
         ]));
@@ -21,7 +21,7 @@ class SsoCest
 
     public function signInWithWrongPassword(ApiTester $I)
     {
-        $I->sendPost('user/login', json_encode([
+        $I->sendPost('auth/login', json_encode([
             'username' => 'stui',
             'password' => '1234'
         ]));
