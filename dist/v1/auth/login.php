@@ -27,6 +27,12 @@
                                                'errorCode' => 102002,
                                            ],
                                            [
+                                               'name'      => 'globalSessionId',
+                                               'types'     => ['string'],
+                                               'required'  => false,
+                                               'errorCode' => 0,
+                                           ],
+                                           [
                                                'name'      => 'username',
                                                'types'     => ['string'],
                                                'required'  => false,
@@ -55,22 +61,43 @@
         APIResponse::getInstance()->addError(100472)->render();
     }
 
-    if ($user->login(password: $input['password'])) {
-        $intermediateToken = new IntermediateToken();
+    $addGlobalSessionToResponse = false;
 
-        try {
-            $token = $intermediateToken->createNew(
-                app:  $app,
-                user: $user
-            );
-        } catch (\IOL\SSO\v1\Exceptions\EncryptionException $e) {
-            APIResponse::getInstance()->addError(999104)->render();
+    if(isset($input['username']) && $input['username'] !== '' && isset($input['password']) && $input['password'] !== '') {
+        if ($user->login(password: $input['password'])) {
+            $addGlobalSessionToResponse = true;
+        } else {
+            APIResponse::getInstance()->addError(100472)->render();
         }
-
-
-        $redirectURL = $loginRequest->redeem();
-        APIResponse::getInstance()->addData('redirect', $redirectURL . $token);
-        APIResponse::getInstance()->addData('globalSessionId',$user->getGlobalSession()->getId());
+    } elseif(isset($input['globalSessionId'])){
+        try {
+            $globalSession = new \IOL\SSO\v1\Session\GlobalSession($input['globalSessionId']);
+        } catch (InvalidValueException $e) {
+            APIResponse::getInstance()->addError(104001)->render();
+        }
+        if(!$globalSession->isValid()){
+            APIResponse::getInstance()->addError(104002)->render();
+        }
+        $user = $globalSession->getUser();
     } else {
-        APIResponse::getInstance()->addError(100472)->render();
+        APIResponse::getInstance()->addError(104003)->render();
+    }
+
+
+    $intermediateToken = new IntermediateToken();
+
+    try {
+        $token = $intermediateToken->createNew(
+            app: $app,
+            user: $user
+        );
+    } catch (\IOL\SSO\v1\Exceptions\EncryptionException $e) {
+        APIResponse::getInstance()->addError(999104)->render();
+    }
+
+    $redirectURL = $loginRequest->redeem();
+    APIResponse::getInstance()->addData('redirect', $redirectURL . $token);
+
+    if($addGlobalSessionToResponse) {
+        APIResponse::getInstance()->addData('globalSessionId', $user->getGlobalSession()->getId());
     }

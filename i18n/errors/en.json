@@ -61,6 +61,21 @@
 
 
 
+  "104001": {
+    "message": "Invalid Global Session ID",
+    "errorCode": 403
+  },
+  "104002": {
+    "message": "Global Session expired",
+    "errorCode": 403
+  },
+  "104003": {
+    "message": "Not all parameters have been provided",
+    "errorCode": 400
+  },
+
+
+
   "202001": {
     "message": "The provided token is of an invalid format",
     "errorCode": 400

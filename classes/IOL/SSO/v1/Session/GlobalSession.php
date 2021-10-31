@@ -121,10 +121,10 @@ class GlobalSession
             // no exception handling necessary. if the addition of the leeway fails, we work without it
         }
         if ($now > $expiry) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -179,6 +179,16 @@ class GlobalSession
     {
         return $this->id;
     }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+
 
     #[Pure] #[ArrayShape(['username' => "string", 'avatar' => "string", 'email' => "string"])] public function getInfo(): array
     {
