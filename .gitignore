@@ -46,7 +46,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-vendor/
+/src/vendor/
 composer.lock
 composer.phar
 .env

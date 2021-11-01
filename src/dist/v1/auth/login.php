@@ -55,15 +55,15 @@
 
     $app = $loginRequest->getApp();
 
-    try {
-        $user = new User(username: $input['username']);
-    } catch (NotFoundException|InvalidValueException $e){
-        APIResponse::getInstance()->addError(100472)->render();
-    }
 
     $addGlobalSessionToResponse = false;
 
     if(isset($input['username']) && $input['username'] !== '' && isset($input['password']) && $input['password'] !== '') {
+        try {
+            $user = new User(username: $input['username']);
+        } catch (NotFoundException|InvalidValueException $e){
+            APIResponse::getInstance()->addError(100472)->render();
+        }
         if ($user->login(password: $input['password'])) {
             $addGlobalSessionToResponse = true;
         } else {
