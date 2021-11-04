@@ -32,4 +32,6 @@ jobs:
           mysql -uroot -proot < $GITHUB_WORKSPACE/src/sql/dump.sql
 
       - name: Test project
-        run: $GITHUB_WORKSPACE/src/vendor/bin/codecept run --no-interaction tests
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          $GITHUB_WORKSPACE/src/vendor/bin/codecept run --no-interaction tests
