@@ -15,6 +15,9 @@ jobs:
         with:
           php_version: 8.0
           php_extensions: openssl bcmath
+          interaction: yes
+          progress: yes
+          
           
       - name: Create .env File
         run: ls -ls
