@@ -1,0 +1,25 @@
+{
+  "name": "isleoflan/sso-server",
+  "description": "This package provides the SSO server for all IOL services",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "stui",
+      "email": "stui@isleoflan.ch"
+    }
+  ],
+  "require": {
+    "nowakowskir/php-jwt": "^2.0",
+    "vlucas/phpdotenv": "^5.3",
+    "ext-openssl": "*",
+    "ext-bcmath": "*"
+  },
+  "require-dev": {
+    "nunomaduro/phpinsights": "v2.0.1",
+    "codeception/codeception": "^4.1",
+    "codeception/module-phpbrowser": "^1.0.0",
+    "codeception/module-asserts": "^1.3",
+    "codeception/module-rest": "^1.0.0"
+  }
+}
