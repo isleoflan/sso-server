@@ -36,6 +36,7 @@ jobs:
       - name: Setup nginx
         run: |
           sudo cp $GITHUB_WORKSPACE/.github/environment/nginx.conf /etc/nginx/sites-enabled/sso.conf
+          sudo nginx -t
           sudo service nginx restart
 
       - name: Test project
