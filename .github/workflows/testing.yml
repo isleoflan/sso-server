@@ -22,12 +22,13 @@ jobs:
           
       - name: Create .env File
         run: |
-          echo 'FRONTEND_BASE_URL="https://localhost/" > $GITHUB_WORKSPACE/src/.env
-          echo 'API_BASE_URL="https://localhost/" > $GITHUB_WORKSPACE/src/.env
-          echo 'DB_USER="root" > $GITHUB_WORKSPACE/src/.env
-          echo 'DB_PASSWORD="root" > $GITHUB_WORKSPACE/src/.env
-          echo 'DB_HOST="localhost" > $GITHUB_WORKSPACE/src/.env
-          echo 'DB_DATABASE="iol_sso" > $GITHUB_WORKSPACE/src/.env
+          echo 'FRONTEND_BASE_URL="https://localhost/"\r\n' > $GITHUB_WORKSPACE/src/.env
+          echo 'API_BASE_URL="https://localhost/"\r\n' > $GITHUB_WORKSPACE/src/.env
+          echo 'DB_USER="root"\r\n' > $GITHUB_WORKSPACE/src/.env
+          echo 'DB_PASSWORD="root"\r\n' > $GITHUB_WORKSPACE/src/.env
+          echo 'DB_HOST="localhost"\r\n' > $GITHUB_WORKSPACE/src/.env
+          echo 'DB_DATABASE="iol_sso"\r\n' > $GITHUB_WORKSPACE/src/.env
+          cat $GITHUB_WORKSPACE/src/.env
           
           
       - name: Import DB
@@ -36,4 +37,4 @@ jobs:
           mysql -uroot -proot < $GITHUB_WORKSPACE/src/sql/dump.sql
 
       - name: Test project
-        run: $GITHUB_WORKSPACE/src/bin/codecept run --no-interaction tests
+        run: $GITHUB_WORKSPACE/src/vendor/bin/codecept run --no-interaction tests
