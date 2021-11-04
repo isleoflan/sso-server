@@ -14,7 +14,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
-          extensions: openssl,bcmath,fpm
+          extensions: openssl,bcmath
+      - name: Add php-fpm
+        run: |
+          sudo apt-get install -y php8.0-fpm
+          sudo service php8.0-fpm start
 
       - name: Install composer packages
         run: cd $GITHUB_WORKSPACE/src && composer install
@@ -31,7 +35,7 @@ jobs:
           
       - name: Setup nginx
         run: |
-          cp $GITHUB_WORKSPACE/.github/environment/nginx.conf /etc/nginx/sites-enabled/sso.conf
+          sudo cp $GITHUB_WORKSPACE/.github/environment/nginx.conf /etc/nginx/sites-enabled/sso.conf
           sudo service nginx restart
 
       - name: Test project
