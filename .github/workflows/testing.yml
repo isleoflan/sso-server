@@ -22,18 +22,18 @@ jobs:
           
       - name: Create .env File
         run: ls -ls
-
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop
         
-      - name: Set up MariaDB
-        uses: getong/mariadb-action@v1.1
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
         with:
           mysql database: 'iol_sso'
           mysql root password: 'test'
           
       - name: Import DB
-        run: mysql --user='root' --password='test' iol_sso < ./sql/dump.sql
+        run: |
+          sudo systemctl start mysql
+          mysql --user='root' --password='test' iol_sso < $GITHUB_WORKSPACE/src/sql/dump.sql
+          systemctl status mysql.service
 
       - name: Test project
         run: echo "test"
