@@ -30,6 +30,10 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -uroot -proot < $GITHUB_WORKSPACE/src/sql/dump.sql
+          
+      - name: Install nginx
+        run: |
+          sudo apt-get install nginx
 
       - name: Test project
         run: |
