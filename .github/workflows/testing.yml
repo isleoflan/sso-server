@@ -22,6 +22,12 @@ jobs:
           
       - name: Create .env File
         run: ls -ls
+        
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: 'iol_sso'
+          mysql root password: 'test'
           
       - name: Import DB
         run: |
