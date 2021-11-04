@@ -15,6 +15,6 @@ suites:
         modules:
             enabled:
                 - REST:
-                      url: https://localhost/v1/
+                      url: http://localhost/v1/
                       depends: PhpBrowser
                       part: json
