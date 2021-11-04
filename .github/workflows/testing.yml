@@ -15,6 +15,10 @@ jobs:
         with:
           php-version: '8.0'
           extensions: openssl,bcmath
+      - name: Add php-fpm
+        run: |
+          sudo apt-get install -y php8.0-fpm
+          sudo service php8.0-fpm start
 
       - name: Install composer packages
         run: cd $GITHUB_WORKSPACE/src && composer install
@@ -23,17 +27,17 @@ jobs:
       - name: Create .env File
         run: |
           echo $'FRONTEND_BASE_URL="https://localhost/"\r\nAPI_BASE_URL="https://localhost/"\r\nDB_USER="root"\r\nDB_PASSWORD="root"\r\nDB_HOST="localhost"\r\nDB_DATABASE="iol_sso"\r\n' > $GITHUB_WORKSPACE/src/.env
-          cat $GITHUB_WORKSPACE/src/.env
-          
           
       - name: Import DB
         run: |
           sudo systemctl start mysql
           mysql -uroot -proot < $GITHUB_WORKSPACE/src/sql/dump.sql
           
-      - name: Install nginx
+      - name: Setup nginx
         run: |
-          sudo apt-get install nginx
+          sudo cp $GITHUB_WORKSPACE/.github/environment/nginx.conf /etc/nginx/sites-enabled/sso.conf
+          sudo nginx -t
+          sudo service nginx restart
 
       - name: Test project
         run: |
