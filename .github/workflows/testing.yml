@@ -33,7 +33,9 @@ jobs:
           mysql root password: 'test'
           
       - name: Import DB
-        run: mysql --user='root' --password='test' iol_sso < $GITHUB_WORKSPACE/src/sql/dump.sql
+        run: |
+          sudo systemctl start mysql
+          mysql --user='root' --password='test' iol_sso < $GITHUB_WORKSPACE/src/sql/dump.sql
 
       - name: Test project
         run: echo "test"
