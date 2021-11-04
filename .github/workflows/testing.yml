@@ -22,7 +22,7 @@ jobs:
           
       - name: Create .env File
         run: |
-          echo $'FRONTEND_BASE_URL="https://localhost/"\r\nAPI_BASE_URL="https://localhost/"\r\nDB_USER="root"\r\nDB_PASSWORD="root"\r\nDB_HOST="localhost"\r\nDB_DATABASE="iol_sso"\r\n'
+          echo $'FRONTEND_BASE_URL="https://localhost/"\r\nAPI_BASE_URL="https://localhost/"\r\nDB_USER="root"\r\nDB_PASSWORD="root"\r\nDB_HOST="localhost"\r\nDB_DATABASE="iol_sso"\r\n' > $GITHUB_WORKSPACE/src/.env
           cat $GITHUB_WORKSPACE/src/.env
           
           
