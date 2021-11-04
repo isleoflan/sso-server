@@ -33,6 +33,7 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql --user='root' --password='test' iol_sso < $GITHUB_WORKSPACE/src/sql/dump.sql
+          systemctl status mysql.service
 
       - name: Test project
         run: echo "test"
