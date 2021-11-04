@@ -17,7 +17,7 @@ jobs:
           php_extensions: openssl bcmath
           
       - name: Create .env File
-        #run: a
+        run: ls -ls
 
       - name: Shutdown Ubuntu MySQL (SUDO)
         run: sudo service mysql stop
@@ -32,4 +32,4 @@ jobs:
         run: mysql --user='root' --password='test' iol_sso < ./sql/dump.sql
 
       - name: Test project
-        #run: |
+        run: echo "test"
