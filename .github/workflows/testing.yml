@@ -14,16 +14,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
-          extensions: openssl bcmath
+          extensions: openssl,bcmath
 
       - name: Install composer packages
-        uses: php-actions/composer@v6
-        with:
-          version: 2
-          php_version: 8.0
-          php_extensions: openssl bcmath
-          interaction: yes
-          progress: yes
+        run: composer install
           
           
       - name: Create .env File
