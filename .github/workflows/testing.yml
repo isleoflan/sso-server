@@ -17,7 +17,7 @@ jobs:
           extensions: openssl,bcmath
 
       - name: Install composer packages
-        run: composer install
+        run: cd $GITHUB_WORKSPACE/src && composer install
           
           
       - name: Create .env File
