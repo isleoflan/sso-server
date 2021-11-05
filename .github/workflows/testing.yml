@@ -15,10 +15,10 @@ jobs:
         with:
           php-version: '8.0'
           extensions: openssl,bcmath
-      - name: Add php-fpm
+          
+      - name: Start php-fpm
         run: |
-          sudo apt-get install -y php8.0-fpm
-          sudo service php8.0-fpm start
+          sudo service php8.0-fpm restart
 
       - name: Install composer packages
         run: cd $GITHUB_WORKSPACE/src && composer install
@@ -43,4 +43,7 @@ jobs:
       - name: Test project
         run: |
           cd $GITHUB_WORKSPACE/src
-          $GITHUB_WORKSPACE/src/vendor/bin/codecept run tests -vv --no-interaction --report --steps
+          wget http://localhost/v1/auth/login
+          tail -n 100 /var/log/nginx/error.log
+          tail -n 100 /var/log/nginx/access.log
+          #$GITHUB_WORKSPACE/src/vendor/bin/codecept run tests -vv
