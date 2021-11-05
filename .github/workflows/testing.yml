@@ -43,4 +43,4 @@ jobs:
       - name: Test project
         run: |
           cd $GITHUB_WORKSPACE/src
-          $GITHUB_WORKSPACE/src/vendor/bin/codecept run -vv --no-interaction --report --steps tests
+          $GITHUB_WORKSPACE/src/vendor/bin/codecept run tests -vv --no-interaction --report --steps
