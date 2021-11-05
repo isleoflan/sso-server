@@ -43,7 +43,4 @@ jobs:
       - name: Test project
         run: |
           cd $GITHUB_WORKSPACE/src
-          wget http://localhost/v1/auth/login
-          tail -n 100 /var/log/nginx/error.log
-          tail -n 100 /var/log/nginx/access.log
-          #$GITHUB_WORKSPACE/src/vendor/bin/codecept run tests -vv
+          $GITHUB_WORKSPACE/src/vendor/bin/codecept run tests -vv
