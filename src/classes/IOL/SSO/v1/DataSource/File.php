@@ -14,7 +14,7 @@ class File
     #[NoReturn] protected function __construct()
     {
         $basePath = __DIR__;
-        for ($returnDirs = 0; $returnDirs < 5; $returnDirs++) {
+        while(!file_exists($basePath.'/classes')){
             $basePath = substr($basePath, 0, strrpos($basePath, '/'));
         }
         $this->basePath = $basePath;

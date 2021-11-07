@@ -71,7 +71,9 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: rm "${{ secrets.SSO_BASE_PATH }}staging"
+          script: |
+            echo 'test'
+         # rm "${{ secrets.SSO_BASE_PATH }}staging"
       
       
      # - name: end maintenance mode
