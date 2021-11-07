@@ -92,6 +92,7 @@ try {
         user: $user
     );
 } catch (\IOL\SSO\v1\Exceptions\EncryptionException $e) {
+    APIResponse::getInstance()->addData('err', $e->getMessage());
     APIResponse::getInstance()->addError(999104)->render();
 }
 
