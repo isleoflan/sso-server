@@ -24,9 +24,14 @@ jobs:
         env:
           SSO_BASE_PATH: ${{ secrets.SSO_BASE_PATH }}
           DEPLOYMENTS_FOLDER: ${{ secrets.DEPLOYMENTS_FOLDER }}
-        run: |
-          echo "deployment id is ${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
-        #sudo mkdir $SSO_BASE_PATH$DEPLOYMENTS
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            mkdir $SSO_BASE_PATH$DEPLOYMENTS/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
       
       #- name: upload to new folder
       
