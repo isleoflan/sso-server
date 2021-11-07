@@ -75,6 +75,10 @@ jobs:
             rm "${{ secrets.SSO_BASE_PATH }}staging"
             sleep 2
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
+            cd live
+            rm -rf tests
+            rm intermediateP*
+            cp "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/intermediateP*" .
       
       
      # - name: end maintenance mode
