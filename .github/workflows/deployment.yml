@@ -18,7 +18,7 @@ jobs:
      
       - name: get current timestamp
         id: deployment-id
-        run: echo '::set-output name=DEPLOYMENT_ID::$(`date +%s`)'
+        run: echo '::set-output name=DEPLOYMENT_ID::$(date +%s)'
       
       - name: create new folder with current timestamp
         env:
