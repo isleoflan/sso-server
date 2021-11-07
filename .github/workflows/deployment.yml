@@ -1,0 +1,53 @@
+name: Deployment
+on:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+     # - name: start maintenance mode on statuspage
+     #   run: echo 'test'
+     
+      - name: get current timestamp
+        id: deployment-id
+        run: |
+          current_deployment=`date +%s`
+          echo '::set-output name=DEPLOYMENT_ID::$current_deployment'
+      
+      - name: create new folder with current timestamp
+        env:
+          SSO_BASE_PATH: ${{ secrets.SSO_BASE_PATH }}
+          DEPLOYMENTS_FOLDER: ${{ secrets.DEPLOYMENTS_FOLDER }}
+        run: |
+          echo "deployment id is ${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
+          #sudo mkdir $SSO_BASE_PATH$DEPLOYMENTS
+      
+      #- name: upload to new folder
+      
+      
+     # - name: run composer install
+      
+      
+      #- name: create symlink to staging environment
+      
+      
+      #- name: run codeception tests
+      
+      
+      #- name: if tests successful, update symlink of live
+      
+      
+      #- name: remove staging symlink
+      
+      
+     # - name: end maintenance mode
+      
+      
