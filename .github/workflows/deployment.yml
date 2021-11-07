@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            mkdir "$SSO_BASE_PATH$DEPLOYMENTS_FOLDER/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+            mkdir "${SSO_BASE_PATH}${DEPLOYMENTS_FOLDER}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
       
       #- name: upload to new folder
       
