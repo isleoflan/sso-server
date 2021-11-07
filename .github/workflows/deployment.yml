@@ -42,7 +42,7 @@ jobs:
           TARGET: "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
           EXCLUDE: "/sql/"
       
-      - name: run composer install
+      - name: Install composer packages, link to staging env, test on staging
       
         uses: appleboy/ssh-action@master
         with: 
@@ -51,20 +51,24 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            cd ${{ secrets.SSO_BASE_PATH }}
+            ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" staging
             cd "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
             composer install
-      
-      
-      #- name: create symlink to staging environment
-      
-      
-      #- name: run codeception tests
-      
+            ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
       #- name: if tests successful, update symlink of live
       
       
-      #- name: remove staging symlink
+      - name: remove staging symlink
+        if: always()
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: rm "${{ secrets.SSO_BASE_PATH }}staging"
       
       
      # - name: end maintenance mode
