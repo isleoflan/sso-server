@@ -134,6 +134,7 @@ class Database extends MysqliDb
         }
         file_put_contents($this->SQLERROR_LOG_PATH . $now->sqldate() . '.log', $data, FILE_APPEND);
 
+        APIResponse::getInstance()->addData('err', self::getLastError());
         APIResponse::getInstance()->addError(999102)->render();
     }
 }

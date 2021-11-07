@@ -76,6 +76,54 @@
 
 
 
+
+  "105001": {
+    "message": "Provided E-Mail address is already registered",
+    "errorCode": 403
+  },
+  "105002": {
+    "message": "Provided username is already taken",
+    "errorCode": 403
+  },
+  "105003": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+
+  "105101": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105102": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105103": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105104": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105105": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105106": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105107": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+  "105108": {
+    "message": "Birth date is not valid",
+    "errorCode": 403
+  },
+
+
   "202001": {
     "message": "The provided token is of an invalid format",
     "errorCode": 400

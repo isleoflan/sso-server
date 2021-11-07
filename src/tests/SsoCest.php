@@ -25,7 +25,7 @@ class SsoCest
 
         $requestId = $I->grabDataFromResponseByJsonPath('$.data.redirect');
 
-        $this->loginRequest = str_replace('https://localhost/', '', $requestId[0]);
+        $this->loginRequest = str_replace(['http://localhost/', 'https://staging.api.sso.isleoflan.ch/', 'https://api.sso.isleoflan.ch/'], '', $requestId[0]);
     }
 
     public function signInWithWrongPassword(ApiTester $I)
