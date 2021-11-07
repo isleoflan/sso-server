@@ -57,6 +57,7 @@ jobs:
             sed -i 's/http:\/\/localhost/https:\/\/staging.api.sso.isleoflan.ch/g' codeception.yml
             openssl genrsa -out intermediatePrivate.pem 4096
             openssl rsa -in intermediatePrivate.pem -outform PEM -pubout -out intermediatePublic.pem
+            chmod 0755 intermediateP*
             composer install
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
