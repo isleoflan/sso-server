@@ -21,9 +21,6 @@ jobs:
         run: echo "::set-output name=DEPLOYMENT_ID::$(date +%s)"
       
       - name: create new folder with current timestamp
-        env:
-          SSO_BASE_PATH: ${{ secrets.SSO_BASE_PATH }}
-          DEPLOYMENTS_FOLDER: ${{ secrets.DEPLOYMENTS_FOLDER }}
         uses: appleboy/ssh-action@master
         with: 
           host: ${{ secrets.REMOTE_HOST }}
@@ -31,7 +28,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            mkdir $SSO_BASE_PATH$DEPLOYMENTS/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
+            mkdir ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
       
       #- name: upload to new folder
       
