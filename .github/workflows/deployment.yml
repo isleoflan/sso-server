@@ -55,6 +55,8 @@ jobs:
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" staging
             cd "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
             sed -i 's/http:\/\/localhost/https:\/\/staging.api.sso.isleoflan.ch/g' codeception.yml
+            openssl genrsa -des3 -out intermediatePrivate.pem 2048
+            openssl rsa -in intermediatePrivate.pem -outform PEM -pubout -out intermediatePublic.pem
             composer install
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
