@@ -61,7 +61,7 @@ jobs:
             composer install
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
-      - name: if tests successful, update symlink of live
+      - name: if tests successful, update symlink of live and remove staging link
         if: success()
         uses: appleboy/ssh-action@master
         with: 
@@ -70,20 +70,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            cd ${{ secrets.SSO_BASE_PATH }}
             rm "${{ secrets.SSO_BASE_PATH }}live"
-            ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
-      
-      
-      - name: remove staging symlink
-        if: always()
-        uses: appleboy/ssh-action@master
-        with: 
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
             rm "${{ secrets.SSO_BASE_PATH }}staging"
+            sleep 2
+            ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
       
       
      # - name: end maintenance mode
