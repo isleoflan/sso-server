@@ -20,7 +20,7 @@ jobs:
         id: deployment-id
         run: |
           current_deployment=`date +%s`
-          echo '::set-output name=DEPLOYMENT_ID::$current_deployment'
+          echo '::set-output name=DEPLOYMENT_ID::`$current_deployment`'
       
       - name: create new folder with current timestamp
         env:
@@ -28,7 +28,7 @@ jobs:
           DEPLOYMENTS_FOLDER: ${{ secrets.DEPLOYMENTS_FOLDER }}
         run: |
           echo "deployment id is ${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}
-          #sudo mkdir $SSO_BASE_PATH$DEPLOYMENTS
+        #sudo mkdir $SSO_BASE_PATH$DEPLOYMENTS
       
       #- name: upload to new folder
       
