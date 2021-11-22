@@ -1,4 +1,5 @@
- <?php
+<?php
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Request\APIResponse;
 
@@ -14,9 +15,9 @@ $response->isSsoFrontendOnly(true);
 $response->check();
 $input = $response->getRequestData([
     [
-        'name'      => 'loginRequestId',
-        'types'     => ['string'],
-        'required'  => true,
+        'name' => 'loginRequestId',
+        'types' => ['string'],
+        'required' => true,
         'errorCode' => 102002,
     ],
 ]);
