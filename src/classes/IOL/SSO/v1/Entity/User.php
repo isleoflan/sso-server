@@ -40,10 +40,8 @@ class User
 
     private ?GlobalSession $globalSession = null;
 
-    private /*readonly*/
-    string $USER_RESET_URL;
-    private /*readonly*/
-    string $REGISTER_DOI_URL;
+    private /*readonly*/ string $USER_RESET_URL;
+    private /*readonly*/ string $REGISTER_DOI_URL;
 
     /**
      * @throws NotFoundException
