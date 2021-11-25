@@ -1,0 +1,91 @@
+name: Deployment
+on:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    environment: live
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+     # - name: start maintenance mode on statuspage
+     #   run: echo 'test'
+     
+      - name: get current timestamp
+        id: deployment-id
+        run: echo "::set-output name=DEPLOYMENT_ID::$(date +%s)"
+      
+      - name: create new folder with current timestamp
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            mkdir "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+            cp "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/.env" "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/.env"
+      
+      - name: upload to new folder
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: src/
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+          EXCLUDE: "/sql/, .env.example, README.md"
+      
+      - name: Install composer packages, link to staging env, test on staging
+        id: testing
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.SSO_BASE_PATH }}
+            ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" staging
+            cd "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+            sed -i 's/http:\/\/localhost/https:\/\/staging.api.sso.isleoflan.ch/g' codeception.yml
+            openssl genrsa -out intermediatePrivate.pem 4096
+            openssl rsa -in intermediatePrivate.pem -outform PEM -pubout -out intermediatePublic.pem
+            chmod 0755 intermediateP*
+            composer install
+            ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
+      
+      - name: if tests successful, update symlink of live and remove staging link, restart consumer
+        if: success()
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.SSO_BASE_PATH }}
+            cd staging
+            rm -rf tests
+            rm -rf vendor
+            rm codeception.yml
+            rm intermediateP*
+            composer install --no-dev
+            cd ..
+            rm "${{ secrets.SSO_BASE_PATH }}live"
+            rm "${{ secrets.SSO_BASE_PATH }}staging"
+            ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
+            cd live
+            date +"%V.%u-%k%M" > classes/IOL/SSO/v1/VERSION.vsf
+            cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/intermediateP* .
+      
+      
+     # - name: end maintenance mode
+      
+      
