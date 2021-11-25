@@ -16,6 +16,7 @@ use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Request\APIResponse;
 use IOL\SSO\v1\Session\GlobalSession;
+use IOL\SSO\v1\Tokens\LoginRequest;
 
 class User
 {
@@ -147,17 +148,18 @@ class User
     }
 
     public function createNew(
-        string      $username,
-        string      $password,
-        Gender      $gender,
-        string      $foreName,
-        string      $lastName,
-        string      $address,
-        string      $zipCode,
-        string      $city,
-        Date        $birthDate,
-        Email       $email,
-        PhoneNumber $phone
+        LoginRequest $loginRequest,
+        string       $username,
+        string       $password,
+        Gender       $gender,
+        string       $foreName,
+        string       $lastName,
+        string       $address,
+        string       $zipCode,
+        string       $city,
+        Date         $birthDate,
+        Email        $email,
+        PhoneNumber  $phone
     )
     {
         $this->id = UUID::newId('user');
@@ -193,8 +195,8 @@ class User
             'phone' => $this->phone->international()
         ]);
 
+        $loginRequest->allocate($this);
 
-        //TODO: send mail job to queue
         $newUserQueue = new Queue(new QueueType(QueueType::ALL_USER));
         $newUserQueue->publishMessage($this->id, new QueueType(QueueType::NEW_USER));
     }

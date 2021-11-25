@@ -1,7 +1,6 @@
 <?php
 // logs in the user and returns an intermediate key
-ini_set('display_errors','On');
-error_reporting(E_ALL);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\Email;
@@ -65,37 +64,37 @@ $input = $response->getRequestData([
     [
         'name' => 'address',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105106,
     ],
     [
         'name' => 'zipCode',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105107,
     ],
     [
         'name' => 'city',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105108,
     ],
     [
         'name' => 'birthDate',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105109,
     ],
     [
         'name' => 'email',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105110,
     ],
     [
         'name' => 'phone',
         'types' => ['string'],
-        'required' => false,
+        'required' => true,
         'errorCode' => 105111,
     ],
 ]);
@@ -115,33 +114,35 @@ $user = new User();
 // create a new gender object, and check, if the input value is allowed, else add an error to the response
 try {
     $gender = new \IOL\SSO\v1\Enums\Gender($input['gender']);
-} catch(IOLException){
+} catch (IOLException) {
     APIResponse::getInstance()->addError(105103);
 }
 
 // validate the given email address and add an error to the response, if it is invalid
 try {
     $email = new Email($input['email']);
-} catch (IOLException){
+} catch (IOLException) {
     APIResponse::getInstance()->addError(105110);
 }
-
 
 
 // validate the given phone number and add an error to the response, if it is invalid
 try {
     $phone = new PhoneNumber($input['phone']);
-} catch (IOLException){
+} catch (IOLException) {
     APIResponse::getInstance()->addError(105111);
 }
 
+if (APIResponse::getInstance()->hasErrors()) {
+    APIResponse::getInstance()->render();
+}
 
 // reassure, that the email address and the username aren't already taken, even though this already
 // happens in the frontend. Better be safe than sorry.
-if($user->emailIsTaken($email)){
+if ($user->emailIsTaken($email)) {
     APIResponse::getInstance()->addError(105001);
 }
-if($user->usernameIsTaken($input['username'])){
+if ($user->usernameIsTaken($input['username'])) {
     APIResponse::getInstance()->addError(105002);
 }
 
@@ -152,13 +153,13 @@ try {
     APIResponse::getInstance()->addError(105003);
 }
 
-if(APIResponse::getInstance()->hasErrors()){
+if (APIResponse::getInstance()->hasErrors()) {
     APIResponse::getInstance()->render();
 }
 
 
-
 $user->createNew(
+    loginRequest: $loginRequest,
     username: $input['username'],
     password: $input['password'],
     gender: $gender,
