@@ -113,4 +113,13 @@ class LoginRequest
     {
         return $this->app;
     }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+    
 }
