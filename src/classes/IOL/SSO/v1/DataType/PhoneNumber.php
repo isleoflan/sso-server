@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace IOL\SSO\v1\DataType;
@@ -30,7 +29,7 @@ class PhoneNumber
         }
     }
 
-    #[Pure] public function __toString(): string
+    public function __toString(): string
     {
         return $this->international() ?? '';
     }

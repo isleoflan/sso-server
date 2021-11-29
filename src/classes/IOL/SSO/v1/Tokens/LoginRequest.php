@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\Tokens;
 
 use IOL\SSO\v1\BitMasks\Scope;
@@ -121,5 +123,5 @@ class LoginRequest
     {
         return $this->id;
     }
-    
+
 }

@@ -10,7 +10,7 @@ for ($returnDirs = 0; $returnDirs < 2; $returnDirs++) {
 }
 
 
-require_once $basePath.'/_loader.php';
+require_once $basePath . '/_loader.php';
 
 $requestedFile = $_SERVER['REQUEST_URI'];
 $requestedFile = str_contains($requestedFile, '?') ? substr(
@@ -19,7 +19,7 @@ $requestedFile = str_contains($requestedFile, '?') ? substr(
     strpos($requestedFile, '?')
 ) : $requestedFile;
 
-$endpointUrl = $basePath.'/dist'.$requestedFile.'.php';
+$endpointUrl = $basePath . '/dist' . $requestedFile . '.php';
 
 if (file_exists($endpointUrl)) {
     $env = \IOL\SSO\v1\DataSource\Environment::getInstance();

@@ -1,6 +1,8 @@
 <?php
 // exchanges the intermediate key to a full JWT
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Request\APIResponse;

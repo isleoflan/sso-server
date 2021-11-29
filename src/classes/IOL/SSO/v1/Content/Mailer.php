@@ -110,43 +110,44 @@ class Mailer
 
         //$this->updateLog($errorMessage);
     }
-/* TODO: mail log
 
-    public function insertLog(): void
-    {
-        $now = new Date('u');
-        $database = Database::getInstance();
-        $database->insert(
-            'mail_log',
-            [
-                'id' => $this->uuid,
-                'create_time' => $now->format(Date::DATETIME_FORMAT_MICRO),
-                'send_time' => null,
-                'receiver' => $this->getReceiver(),
-                'subject' => $this->getSubject(),
-                'template' => $this->getTemplate(),
-                'success' => null,
-                'smtp_debug' => null,
-            ]
-        );
-    }
+    /* TODO: mail log
 
-    public function updateLog(?string $errorMessage): void
-    {
-        $now = new Date('u');
-        $database = Database::getInstance();
-        $database->where('id', $this->uuid);
-        $database->update(
-            'mail_log',
-            [
-                'send_time' => $now->format(Date::DATETIME_FORMAT_MICRO),
-                'success' => is_null($errorMessage),
-                'errors' => $errorMessage,
-                'smtp_debug' => Mailer::$smtpDebug,
-            ]
-        );
-    }
-*/
+        public function insertLog(): void
+        {
+            $now = new Date('u');
+            $database = Database::getInstance();
+            $database->insert(
+                'mail_log',
+                [
+                    'id' => $this->uuid,
+                    'create_time' => $now->format(Date::DATETIME_FORMAT_MICRO),
+                    'send_time' => null,
+                    'receiver' => $this->getReceiver(),
+                    'subject' => $this->getSubject(),
+                    'template' => $this->getTemplate(),
+                    'success' => null,
+                    'smtp_debug' => null,
+                ]
+            );
+        }
+
+        public function updateLog(?string $errorMessage): void
+        {
+            $now = new Date('u');
+            $database = Database::getInstance();
+            $database->where('id', $this->uuid);
+            $database->update(
+                'mail_log',
+                [
+                    'send_time' => $now->format(Date::DATETIME_FORMAT_MICRO),
+                    'success' => is_null($errorMessage),
+                    'errors' => $errorMessage,
+                    'smtp_debug' => Mailer::$smtpDebug,
+                ]
+            );
+        }
+    */
     public function saveHtml(): void
     {
         $mailContent = $this->prerenderedHtml;

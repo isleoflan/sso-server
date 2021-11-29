@@ -25,7 +25,7 @@ class BitMask
      */
     public function __construct(?int $value = null)
     {
-        if(!is_null($value)) {
+        if (!is_null($value)) {
             $this->allowList = $value;
         }
     }
@@ -72,7 +72,7 @@ class BitMask
          * e.g. setting 0100 twice results in 1000. this means, that now a different value is set,
          *      but the actual value is not anymore
          */
-         if (($value > 0 && ($value & ($value - 1)) === 0) && (($this->allowList & $value) === 0)) {
+        if (($value > 0 && ($value & ($value - 1)) === 0) && (($this->allowList & $value) === 0)) {
             $this->allowList += $value;
         }
     }
@@ -88,7 +88,7 @@ class BitMask
         return ($this->allowList & $value) === $value;
     }
 
-    public function getIntegerValue() : int
+    public function getIntegerValue(): int
     {
         return $this->allowList;
     }

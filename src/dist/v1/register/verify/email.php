@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\NotFoundException;
@@ -28,7 +30,7 @@ $user = new User();
 
 try {
     $user->fetchByConfirmationHash($input['doi']);
-} catch(NotFoundException){
+} catch (NotFoundException) {
     $response->addError(105201)->render();
 }
 

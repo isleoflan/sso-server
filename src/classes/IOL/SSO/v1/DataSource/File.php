@@ -11,10 +11,11 @@ class File
     private /*readonly*/ string $basePath;
     private static ?File $instance = null;
 
-    #[NoReturn] protected function __construct()
+    #[NoReturn]
+    protected function __construct()
     {
         $basePath = __DIR__;
-        while(!file_exists($basePath.'/classes')){
+        while (!file_exists($basePath . '/classes')) {
             $basePath = substr($basePath, 0, strrpos($basePath, '/'));
         }
         $this->basePath = $basePath;

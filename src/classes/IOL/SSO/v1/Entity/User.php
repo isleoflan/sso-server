@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\Entity;
 
 use IOL\SSO\v1\Content\Mailer;
@@ -40,8 +42,10 @@ class User
 
     private ?GlobalSession $globalSession = null;
 
-    private /*readonly*/ string $USER_RESET_URL;
-    private /*readonly*/ string $REGISTER_DOI_URL;
+    private /*readonly*/
+    string $USER_RESET_URL;
+    private /*readonly*/
+    string $REGISTER_DOI_URL;
 
     /**
      * @throws NotFoundException
@@ -288,6 +292,14 @@ class User
         $globalSession->createNew($this);
 
         return $globalSession;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail(): Email
+    {
+        return $this->email;
     }
 
 }

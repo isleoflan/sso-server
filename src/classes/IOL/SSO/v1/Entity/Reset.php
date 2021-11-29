@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\Entity;
 
 use IOL\SSO\v1\DataSource\Database;
@@ -60,10 +62,10 @@ class Reset
 
         $database = Database::getInstance();
         $database->insert(self::DB_TABLE, [
-            'id'                => $this->id,
-            'user_id'           => $this->user->getId(),
-            'created'           => $this->created->format(Date::DATETIME_FORMAT_MICRO),
-            'login_request_id'  => $this->loginRequest->getId()
+            'id' => $this->id,
+            'user_id' => $this->user->getId(),
+            'created' => $this->created->format(Date::DATETIME_FORMAT_MICRO),
+            'login_request_id' => $this->loginRequest->getId()
         ]);
 
 

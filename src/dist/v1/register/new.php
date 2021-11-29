@@ -1,6 +1,8 @@
 <?php
 // logs in the user and returns an intermediate key
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\Email;
@@ -13,7 +15,6 @@ use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Request\APIResponse;
 use IOL\SSO\v1\Tokens\IntermediateToken;
 use IOL\SSO\v1\Tokens\LoginRequest;
-
 
 $response = APIResponse::getInstance();
 

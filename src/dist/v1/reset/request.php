@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\Reset;
 use IOL\SSO\v1\Entity\User;
@@ -41,7 +43,7 @@ try {
 
 try {
     $user = new User(username: $input['username']);
-} catch (IOLException){
+} catch (IOLException) {
     $response->render();
 }
 

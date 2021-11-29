@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\Reset;
 use IOL\SSO\v1\Exceptions\IOLException;
@@ -16,7 +18,7 @@ $response->isSSOFrontendOnly(true);
 $response->check();
 $input = $response->getRequestData([
     [
-        'name' => 'resetID',
+        'name' => 'resetId',
         'types' => ['string'],
         'required' => true,
         'errorCode' => 106003,
@@ -24,7 +26,7 @@ $input = $response->getRequestData([
 ]);
 
 try {
-    $reset = new Reset($input['resetID']);
+    $reset = new Reset($input['resetId']);
 } catch (IOLException) {
     $response->addError(106003)->render();
 }

@@ -122,7 +122,8 @@ class Database extends MysqliDb
         return $this->queryCount;
     }
 
-    #[NoReturn] private function handleException(Exception $e): void
+    #[NoReturn]
+    private function handleException(Exception $e): void
     {
         $now = new Date('u');
         $data = "\r\n\r\n[ " . $now->micro() . ' ] EXM: ' . $e->getMessage() . "\r\n";
