@@ -124,6 +124,16 @@
   },
 
 
+  "105201": {
+    "message": "Provided confirmation hash is invalid",
+    "errorCode": 404
+  },
+  "105202": {
+    "message": "No Login request was found for this user",
+    "errorCode": 404
+  },
+
+
   "202001": {
     "message": "The provided token is of an invalid format",
     "errorCode": 400

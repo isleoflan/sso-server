@@ -7,15 +7,15 @@ namespace IOL\SSO\v1\DataType;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use JetBrains\PhpStorm\Pure;
 
-class Email
+class Email implements \JsonSerializable
 {
     /**
      * @throws InvalidValueException
      */
     public function __construct(private string $email)
     {
-        if(!$this->isValid()){
-            throw new InvalidValueException('Email is not valid',5491);
+        if (!$this->isValid()) {
+            throw new InvalidValueException('Email is not valid', 5491);
         }
     }
 
@@ -50,5 +50,11 @@ class Email
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+
+    #[Pure]
+    public function jsonSerialize(): string
+    {
+        return $this->getEmail();
     }
 }

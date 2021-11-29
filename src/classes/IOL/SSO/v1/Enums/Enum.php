@@ -17,7 +17,7 @@ class Enum implements \JsonSerializable
         $reflection = new \ReflectionClass(get_called_class());
 
         if (!in_array($this->value, array_values($reflection->getConstants()))) {
-            throw new InvalidValueException('The value "'. $this->value .'" is not allowed',5418);
+            throw new InvalidValueException('The value "' . $this->value . '" is not allowed', 5418);
         }
     }
 

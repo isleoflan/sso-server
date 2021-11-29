@@ -111,7 +111,8 @@ class Authentication
         APIResponse::getInstance()->addError(100002)->render();
     }
 
-    #[Pure] public static function getSessionId(): ?string
+    #[Pure]
+    public static function getSessionId(): ?string
     {
         if (isset(self::$session)) {
             return self::$session->getSessionId();

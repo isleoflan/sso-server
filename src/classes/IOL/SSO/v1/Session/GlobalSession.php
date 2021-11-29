@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\Session;
 
 use DateInterval;
@@ -54,8 +56,8 @@ class GlobalSession
      */
     public function __construct(?string $id = null)
     {
-        if(!is_null($id)){
-            if(!UUID::isValid($id)){
+        if (!is_null($id)) {
+            if (!UUID::isValid($id)) {
                 throw new InvalidValueException('Invalid Global Session ID');
             }
             $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
@@ -65,9 +67,10 @@ class GlobalSession
     /**
      * @throws \IOL\SSO\v1\Exceptions\NotFoundException|\IOL\SSO\v1\Exceptions\InvalidValueException
      */
-    private function loadData(array|false $values){
+    private function loadData(array|false $values)
+    {
 
-        if(!$values || count($values) === 0){
+        if (!$values || count($values) === 0) {
             throw new NotFoundException('Login Request could not be loaded');
         }
 
@@ -77,28 +80,28 @@ class GlobalSession
         $this->expiration = new Date($values['expiration']);
     }
 
-    public function createNew(User $user) : string
+    public function createNew(User $user): string
     {
         $database = Database::getInstance();
 
         $this->user = $user;
 
         $database->where('user_id', $this->user->getId());
-        foreach($database->get(self::DB_TABLE) as $existingGlobalSession){
+        foreach ($database->get(self::DB_TABLE) as $existingGlobalSession) {
             $existingGlobalSession = new GlobalSession($existingGlobalSession['id']);
             $existingGlobalSession->revoke();
         }
 
         $this->created = new Date('now');
         $this->expiration = clone $this->created;
-        $this->expiration->add(new \DateInterval('PT'.self::EXPIRATION_INTERVAL.'S'));
+        $this->expiration->add(new \DateInterval('PT' . self::EXPIRATION_INTERVAL . 'S'));
         $this->id = UUID::newId(self::DB_TABLE);
 
         $database->insert(self::DB_TABLE, [
-            'id'            => $this->id,
-            'user_id'       => $this->user->getId(),
-            'created'       => $this->created->format(Date::DATETIME_FORMAT_MICRO),
-            'expiration'    => $this->expiration->format(Date::DATETIME_FORMAT_MICRO),
+            'id' => $this->id,
+            'user_id' => $this->user->getId(),
+            'created' => $this->created->format(Date::DATETIME_FORMAT_MICRO),
+            'expiration' => $this->expiration->format(Date::DATETIME_FORMAT_MICRO),
         ]);
 
         return $this->id;
@@ -189,13 +192,14 @@ class GlobalSession
     }
 
 
-
-    #[Pure] #[ArrayShape(['username' => "string", 'avatar' => "string", 'email' => "string"])] public function getInfo(): array
+    #[Pure]
+    #[ArrayShape(['username' => "string", 'avatar' => "string", 'email' => "string"])]
+    public function getInfo(): array
     {
         return [
-            'username'  => $this->user->getUsername(),
-            'avatar'    => '', // TODO: link account api / implement avatar & CDN service
-            'email'     => 'tbd@test.ch', // TODO: link account api
+            'username' => $this->user->getUsername(),
+            'avatar' => '', // TODO: link account api / implement avatar & CDN service
+            'email' => $this->user->getEmail(), // TODO: link account api
         ];
     }
 

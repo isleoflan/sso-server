@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\DataSource;
 
 use Dotenv\Dotenv;
@@ -9,7 +11,8 @@ class Environment
 {
     private static ?Environment $instance = null;
 
-    #[NoReturn] protected function __construct()
+    #[NoReturn]
+    protected function __construct()
     {
         $dotenv = Dotenv::createImmutable(File::getBasePath());
         $dotenv->load();

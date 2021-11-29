@@ -10,10 +10,11 @@ use JetBrains\PhpStorm\ArrayShape;
 class Error
 {
     public function __construct(
-        private int $errorCode,
+        private int     $errorCode,
         private ?string $message = null,
-        private ?int $httpCode = null
-    ) {
+        private ?int    $httpCode = null
+    )
+    {
         if (is_null($message) || is_null($httpCode)) {
             $this->lookup();
         }
@@ -38,9 +39,9 @@ class Error
 
     private function lookup(): void
     {
-        $errorFileBase = File::getBasePath().'/i18n/errors/';
+        $errorFileBase = File::getBasePath() . '/i18n/errors/';
         $errorLanguage = 'en';
-        $errorFile = $errorFileBase.$errorLanguage.'.json';
+        $errorFile = $errorFileBase . $errorLanguage . '.json';
         $lookupTable = json_decode(file_get_contents($errorFile), true);
 
         if (isset($lookupTable[$this->errorCode])) {

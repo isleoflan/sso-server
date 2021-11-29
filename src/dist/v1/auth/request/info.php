@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Request\APIResponse;
 

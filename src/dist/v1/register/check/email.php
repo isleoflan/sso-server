@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\DataType\Email;
 use IOL\SSO\v1\Entity\User;
@@ -23,7 +25,6 @@ $input = $response->getRequestData([
         'errorCode' => 105110,
     ],
 ]);
-
 
 $user = new User();
 
