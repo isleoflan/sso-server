@@ -1,27 +1,29 @@
 <?php
 // exchanges the intermediate key to a full JWT
 
-    use IOL\SSO\v1\BitMasks\RequestMethod;
-    use IOL\SSO\v1\Entity\App;
-    use IOL\SSO\v1\Request\APIResponse;
+declare(strict_types=1);
 
-    $response = APIResponse::getInstance();
+use IOL\SSO\v1\BitMasks\RequestMethod;
+use IOL\SSO\v1\Entity\App;
+use IOL\SSO\v1\Request\APIResponse;
 
-    $response->setAllowedRequestMethods(
-        new RequestMethod(RequestMethod::POST)
-    );
-    $response->needsAuth(false);
+$response = APIResponse::getInstance();
 
-    $response->check();
-    $input = $response->getRequestData([
-                                           [
-                                               'name'      => 'token',
-                                               'types'     => ['string'],
-                                               'required'  => true,
-                                               'errorCode' => 0,
-                                           ],
-                                       ]);
+$response->setAllowedRequestMethods(
+    new RequestMethod(RequestMethod::POST)
+);
+$response->needsAuth(false);
 
-    $app = App::getCurrent();
+$response->check();
+$input = $response->getRequestData([
+    [
+        'name' => 'token',
+        'types' => ['string'],
+        'required' => true,
+        'errorCode' => 0,
+    ],
+]);
+
+$app = App::getCurrent();
 
     

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\DataSource;
 
 use IOL\SSO\v1\Enums\QueueType;
@@ -25,7 +27,7 @@ class Queue
         );
 
         $this->channel = $this->connection->channel();
-        $this->channel->queue_declare($this->type->getValue(),false, true, false, false);
+        $this->channel->queue_declare($this->type->getValue(), false, true, false, false);
     }
 
     public function __destruct()
@@ -41,7 +43,7 @@ class Queue
 
     public function publishMessage(string|array $message, QueueType $type)
     {
-        if(is_array($message)) {
+        if (is_array($message)) {
             $message = json_encode($message);
         }
         $message = new AMQPMessage($message);
@@ -50,7 +52,7 @@ class Queue
 
     public function addConsumer(callable $callback, QueueType $type)
     {
-        $this->channel->basic_consume($type->getValue(), '',false, false, false, false, $callback);
+        $this->channel->basic_consume($type->getValue(), '', false, false, false, false, $callback);
     }
 
     /**

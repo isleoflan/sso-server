@@ -613,12 +613,14 @@ class oldUser
         $this->activationDate = $activationDate;
     }
 
-    #[Pure] public function isActivated(): bool
+    #[Pure]
+    public function isActivated(): bool
     {
         return !is_null($this->getActivationDate());
     }
 
-    #[Pure] public function getSalutation(bool $complete = false): string
+    #[Pure]
+    public function getSalutation(bool $complete = false): string
     {
         switch ($complete) {
             case true:

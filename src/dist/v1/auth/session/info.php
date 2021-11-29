@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Request\APIResponse;
 
@@ -14,9 +17,9 @@ $response->isSsoFrontendOnly(true);
 $response->check();
 $input = $response->getRequestData([
     [
-        'name'      => 'globalSessionId',
-        'types'     => ['string'],
-        'required'  => true,
+        'name' => 'globalSessionId',
+        'types' => ['string'],
+        'required' => true,
         'errorCode' => 103001,
     ],
 ]);

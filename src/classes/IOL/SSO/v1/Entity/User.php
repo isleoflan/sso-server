@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IOL\SSO\v1\Entity;
 
 use IOL\SSO\v1\Content\Mailer;
@@ -16,6 +18,7 @@ use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Request\APIResponse;
 use IOL\SSO\v1\Session\GlobalSession;
+use IOL\SSO\v1\Tokens\LoginRequest;
 
 class User
 {
@@ -102,9 +105,7 @@ class User
                 if (!$this->isBlocked()) {
                     // user has entered correct email/password combination and also activated their account
                     // create a new global session for the user
-                    $globalSession = new GlobalSession();
-                    $globalSession->createNew($this);
-                    $this->globalSession = $globalSession;
+                    $this->globalSession = $this->createNewGlobalSession();
 
 
                     // and return that the login succeeded
@@ -147,17 +148,18 @@ class User
     }
 
     public function createNew(
-        string      $username,
-        string      $password,
-        Gender      $gender,
-        string      $foreName,
-        string      $lastName,
-        string      $address,
-        string      $zipCode,
-        string      $city,
-        Date        $birthDate,
-        Email       $email,
-        PhoneNumber $phone
+        LoginRequest $loginRequest,
+        string       $username,
+        string       $password,
+        Gender       $gender,
+        string       $foreName,
+        string       $lastName,
+        string       $address,
+        string       $zipCode,
+        string       $city,
+        Date         $birthDate,
+        Email        $email,
+        PhoneNumber  $phone
     )
     {
         $this->id = UUID::newId('user');
@@ -193,8 +195,8 @@ class User
             'phone' => $this->phone->international()
         ]);
 
+        $loginRequest->allocate($this);
 
-        //TODO: send mail job to queue
         $newUserQueue = new Queue(new QueueType(QueueType::ALL_USER));
         $newUserQueue->publishMessage($this->id, new QueueType(QueueType::NEW_USER));
     }
@@ -256,7 +258,48 @@ class User
 
     public function getDOIUrl(): string
     {
-        return $this->REGISTER_DOI_URL . md5($this->getUsername() . Environment::get('DOI_SALT'));
+        return $this->REGISTER_DOI_URL . $this->getConfirmationHash();
+    }
+
+    public function getConfirmationHash(): string
+    {
+        return md5($this->getUsername() . Environment::get('DOI_SALT'));
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function fetchByConfirmationHash(string $hash): void
+    {
+        $data = Database::getRow('MD5(CONCAT(username, "' . Environment::get('DOI_SALT') . '"))', $hash, self::DB_TABLE);
+        $this->loadData($data);
+    }
+
+    public function activate(): void
+    {
+        $database = Database::getInstance();
+        $database->where('id', $this->getId());
+        $database->update(self::DB_TABLE, [
+            'activated' => Date::now(Date::DATETIME_FORMAT_MICRO)
+        ]);
+
+        $this->createNewGlobalSession();
+    }
+
+    private function createNewGlobalSession(): GlobalSession
+    {
+        $globalSession = new GlobalSession();
+        $globalSession->createNew($this);
+
+        return $globalSession;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail(): Email
+    {
+        return $this->email;
     }
 
 }

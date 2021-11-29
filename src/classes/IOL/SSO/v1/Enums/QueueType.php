@@ -8,4 +8,5 @@ class QueueType extends Enum
 {
     public const ALL_USER = 'iol.sso.user.*';
     public const NEW_USER = 'iol.sso.user.new';
+    public const RESET_USER = 'iol.sso.user.reset';
 }
