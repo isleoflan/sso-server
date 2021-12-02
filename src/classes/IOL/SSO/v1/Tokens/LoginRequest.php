@@ -62,15 +62,13 @@ class LoginRequest
 
         $this->id = UUID::newId(self::DB_TABLE);
 
-        $now = new Date();
-
         $database = Database::getInstance();
         $database->insert(self::DB_TABLE, [
             'id' => $this->id,
             'app_id' => $this->app->getId(),
             'redirect_url' => $this->redirectURL,
             'scope' => $this->scope->getIntegerValue(),
-            'created' => $now->format(Date::DATETIME_FORMAT_MICRO),
+            'created' => Date::now(Date::DATETIME_FORMAT_MICRO),
         ]);
 
         return $this->id;
