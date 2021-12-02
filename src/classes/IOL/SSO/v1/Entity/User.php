@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IOL\SSO\v1\Entity;
 
-use IOL\SSO\v1\Content\Mailer;
+use IOL\SSO\v1\Content\Mail;
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataSource\Environment;
 use IOL\SSO\v1\DataSource\Queue;
@@ -42,10 +42,7 @@ class User
 
     private ?GlobalSession $globalSession = null;
 
-    private /*readonly*/
-    string $USER_RESET_URL;
-    private /*readonly*/
-    string $REGISTER_DOI_URL;
+    private /*readonly*/ string $REGISTER_DOI_URL;
 
     /**
      * @throws NotFoundException
@@ -66,7 +63,6 @@ class User
 
 
         // hydrate the readonly URL variables
-        $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . '/auth/reset-password/';
         $this->REGISTER_DOI_URL = Environment::get('FRONTEND_BASE_URL') . '/auth/register/';
     }
 
@@ -246,14 +242,25 @@ class User
 
     public function sendConfirmationMail()
     {
-        $mail = new Mailer();
-        $mail->setReceiver($this->email->getEmail());
+        /*        $mail = new Mailer();
+                $mail->setReceiver($this->email->getEmail());
+                $mail->setSubject('Bestätige deine E-Mail Adresse');
+                $mail->setTemplate('register');
+                $mail->setPreheader('Aktiviere jetzt deinen Account, um dir ein Ticket für die nächste Isle of LAN zu sichern.');
+                $mail->addTemplateSetting('firstname', $this->foreName);
+                $mail->addTemplateSetting('activatelink', $this->getDOIUrl());
+                $mail->send();*/
+
+        $mail = new Mail();
+        $mail->setReceiver($this->email);
         $mail->setSubject('Bestätige deine E-Mail Adresse');
         $mail->setTemplate('register');
-        $mail->setPreheader('Aktiviere jetzt deinen Account, um dir ein Ticket für die nächste Isle of LAN zu sichern.');
-        $mail->addTemplateSetting('firstname', $this->foreName);
-        $mail->addTemplateSetting('activatelink', $this->getDOIUrl());
-        $mail->send();
+        $mail->addVariable('preheader', 'Aktiviere jetzt deinen Account, um dir ein Ticket für die nächste Isle of LAN zu sichern.');
+        $mail->addVariable('firstname', $this->foreName);
+        $mail->addVariable('activatelink', $this->getDOIUrl());
+
+        $mailerQueue = new Queue(new QueueType(QueueType::MAILER));
+        $mailerQueue->publishMessage(json_encode($mail), new QueueType(QueueType::MAILER));
     }
 
     public function getDOIUrl(): string
