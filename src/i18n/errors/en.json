@@ -140,6 +140,12 @@
   },
 
 
+  "401001": {
+    "message": "The provided token is invalid",
+    "errorCode": 404
+  },
+
+
   "999101": {
     "message": "General Server Error",
     "errorCode": 500
