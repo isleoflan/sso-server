@@ -12,6 +12,7 @@ use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\EncryptionException;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
+use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Session\GlobalSession;
 
 class IntermediateToken
@@ -171,6 +172,13 @@ class IntermediateToken
      */
     public function checkToken(string $token): array
     {
+        $database = Database::getInstance();
+        $database->where('token', $token);
+        $existsInDb = $database->get(self::DB_TABLE);
+        if(count($existsInDb) !== 1){
+            throw new NotFoundException('Token does not exist');
+        }
+
         [$token, $checksum] = explode('*', $token);
 
         if (Base64::encode(Base64::decode($token)) !== $token) {
@@ -198,6 +206,10 @@ class IntermediateToken
             $decryptedData .= $decryptedChunk;
         }
 
+        $database->where('token', $token);
+        $database->delete(self::DB_TABLE);
+
         return json_decode($decryptedData, true);
     }
+
 }
