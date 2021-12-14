@@ -62,7 +62,7 @@ create table intermediate_token
     primary key (user_id, app_id)
 );
 
-INSERT INTO iol_sso.intermediate_token (user_id, app_id, token, expiration)
+INSERT INTO iol_sso.intermediate_token (global_session_id, app_id, token, expiration)
 VALUES ('78eb93bf-079c-4dc4-868c-f3d0271950c2', 'e9fca7d0-b02d-40bd-bad8-3fb3c76b9096',
         'wcF1I2BCvcJT0FopX_HWNzsKKGb370T7dixiCiwoJ-hjXA0s7m3RxwRe1_z_B9wt10P-nUAEz6ziFz5DVJggIj-FiJWSg7EOZNqlxYGjZlV3WIlEcX0AH5z3YEDlkMoKoUHporbADaRmOy8cpTSYP8gGpgDajqKs67vAR9ChmDw=*MTMyZA',
         '2021-10-31 00:35:43.000000');

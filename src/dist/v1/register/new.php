@@ -76,7 +76,7 @@ $input = $response->getRequestData([
     ],
     [
         'name' => 'city',
-        'types' => ['string'],
+        'types' => ['int'],
         'required' => true,
         'errorCode' => 105108,
     ],

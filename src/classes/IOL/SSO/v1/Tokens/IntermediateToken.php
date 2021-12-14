@@ -123,7 +123,7 @@ class IntermediateToken
         $database = Database::getInstance();
         $database->replace(self::DB_TABLE, [
             'app_id' => $app->getId(),
-            'user_id' => $globalSession->getId(),
+            'global_session_id' => $globalSession->getId(),
             'token' => $token,
             'expiration' => $expiration->sqldatetime()
         ]);
@@ -206,10 +206,13 @@ class IntermediateToken
             $decryptedData .= $decryptedChunk;
         }
 
-        $database->where('token', $token);
+        $decryptedData = json_decode($decryptedData, true);
+
+        $database->where('global_session_id', $decryptedData['gsId']);
+        $database->where('app_id', $decryptedData['appId']);
         $database->delete(self::DB_TABLE);
 
-        return json_decode($decryptedData, true);
+        return $decryptedData;
     }
 
 }
