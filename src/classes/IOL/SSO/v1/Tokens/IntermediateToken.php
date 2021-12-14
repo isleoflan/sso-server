@@ -12,6 +12,7 @@ use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\EncryptionException;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
+use IOL\SSO\v1\Session\GlobalSession;
 
 class IntermediateToken
 {
@@ -107,9 +108,9 @@ class IntermediateToken
     /**
      * @throws \IOL\SSO\v1\Exceptions\EncryptionException
      */
-    public function createNew(App $app, User $user): string
+    public function createNew(App $app, GlobalSession $globalSession): string
     {
-        $token = $this->generateToken($app, $user);
+        $token = $this->generateToken($app, $globalSession);
 
         $expiration = new Date('now');
 
@@ -121,7 +122,7 @@ class IntermediateToken
         $database = Database::getInstance();
         $database->replace(self::DB_TABLE, [
             'app_id' => $app->getId(),
-            'user_id' => $user->getId(),
+            'user_id' => $globalSession->getId(),
             'token' => $token,
             'expiration' => $expiration->sqldatetime()
         ]);
@@ -132,9 +133,9 @@ class IntermediateToken
     /**
      * @throws EncryptionException
      */
-    public function generateToken(App $app, User $user): string
+    public function generateToken(App $app, GlobalSession $globalSession): string
     {
-        $data = ['appId' => $app->getId(), 'userId' => $user->getId(), 's' => time()];
+        $data = ['appId' => $app->getId(), 'gsId' => $globalSession->getId(), 's' => time()];
 
         $encryptedData = '';
         $plainData = str_split(json_encode($data), $this->encryptionBlockSize);

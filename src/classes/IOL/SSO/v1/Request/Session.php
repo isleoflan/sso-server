@@ -7,18 +7,24 @@ namespace IOL\SSO\v1\Request;
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
-use IOL\SSO\v1\Entity\oldUser;
+use IOL\SSO\v1\Entity\App;
 use DateInterval;
 use Exception;
+use IOL\SSO\v1\Entity\User;
+use IOL\SSO\v1\Exceptions\InvalidValueException;
+use IOL\SSO\v1\Exceptions\NotFoundException;
+use IOL\SSO\v1\Session\GlobalSession;
 
 class Session
 {
+    public const DB_TABLE = 'session';
+
     /**
      * Defines after which amount of seconds, without being renewed, the session is being invalidated.
      *
      * @see Session::EXPIRATION_LEEWAY
      */
-    public const EXPIRATION_INTERVAL = 300;
+    public const EXPIRATION_INTERVAL = 1800;
 
     /**
      * Defines the "wiggle room" in seconds, before the invalidation of the session is really taking place.
@@ -37,91 +43,95 @@ class Session
      */
     public const EXPIRATION_LEEWAY = 10;
 
+
+    private string $id;
     private Date $creation;
     private Date $expiry;
+    private GlobalSession $globalSession;
+    private App $app;
 
-    public function __construct(
-        private ?oldUser $user = null,
-        private ?string  $sessionId = null
-    )
-    {
-        if (!is_null($this->sessionId)) {
-            $this->load($this->sessionId);
-        }
-    }
 
-    private function load(string $sessionId): void
+    /**
+     * @throws NotFoundException
+     * @throws InvalidValueException
+     */
+    public function __construct(?string $id = null)
     {
-        $database = Database::getInstance();
-        $database->where('id', $sessionId);
-        $data = $database->get('sessions');
-        if (isset($data[0]['id'])) {
-            $this->setSessionId($data[0]['id']);
-            try {
-                $this->setCreation(new Date($data[0]['created']));
-            } catch (Exception) {
+        if (!is_null($id)) {
+            if (!UUID::isValid($id)) {
+                throw new InvalidValueException('Invalid Refresh Token');
             }
-            try {
-                $this->setExpiry(new Date($data[0]['expiration']));
-            } catch (Exception) {
-            }
-            $this->setUser(new oldUser(username: $data[0]['username']));
-        } else {
-            $this->setSessionId(null);
+            $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
         }
     }
 
     /**
-     * @return string|bool
-     *
-     * create a new session for a given user. oldUser object has to be set beforehand, either manually or by injecting it
-     * into the constructor of the session object
+     * @throws NotFoundException
+     * @throws \IOL\SSO\v1\Exceptions\InvalidValueException
+     * @throws \Exception
      */
-    public function create(): string|bool
+    private function loadData(array|false $values)
     {
-        if (is_null($this->getUser())) {
-            // if no user is assigned to the session object, no session can be created
-            return false;
+
+        if (!$values || count($values) === 0) {
+            throw new NotFoundException('Refresh Token could not be found');
         }
 
+        $this->id = $values['id'];
+        $this->globalSession = new GlobalSession($values['global_session_id']);
+        $this->app = new App($values['app_id']);
+        $this->creation = new Date($values['created']);
+        $this->expiry = new Date($values['expiration']);
+    }
+
+
+    /**
+     * @return string|bool
+     *
+     * create a new session for a given user.
+     */
+    public function create(GlobalSession $globalSession, App $app): string|bool
+    {
         // don't reuse already existing session ids
         // oh no, we might eventually run out of ids
         // future bugfix: @ me in 10790 years, if you need to serve 1 octillion sessions per second 24/7
-        do {
-            $this->setSessionId(UUID::v4());
-        } while ($this->sessionExists());
+        $this->id = UUID::newId(self::DB_TABLE);
+        $this->app = $app;
 
-        $this->setCreation(new Date('u'));
+        $this->globalSession = $globalSession;
+
+        $this->creation = new Date('u');
 
         $expiry = clone $this->creation;
         try {
             $expiry->add(new DateInterval('PT' . self::EXPIRATION_INTERVAL . 'S'));
         } catch (Exception) {
         }
-        $this->setExpiry($expiry);
+        $this->expiry = $expiry;
 
         $database = Database::getInstance();
         $database->insert(
-            'sessions',
+            self::DB_TABLE,
             [
-                'id' => $this->getSessionId(),
-                'username' => $this->getUser()->getUsername(),
-                'created' => $this->getCreation()->micro(),
-                'expiration' => $this->getExpiry()->micro(),
+                'id' => $this->id,
+                'global_session_id' => $this->globalSession->getId(),
+                'app_id' => $this->app->getId(),
+                'created' => $this->creation->micro(),
+                'expiration' => $this->expiry->micro(),
             ]
         );
 
-        return $this->getSessionId();
+        return $this->id;
     }
 
     public function sessionExists(): bool
     {
-        if (is_null($this->getSessionId())) {
+        if (is_null($this->getId())) {
             return false;
         }
         $database = Database::getInstance();
-        $database->where('id', $this->getSessionId());
-        $data = $database->get('sessions');
+        $database->where('id', $this->getId());
+        $data = $database->get(self::DB_TABLE);
 
         return isset($data[0]['id']);
     }
@@ -133,10 +143,10 @@ class Session
             $now->add(new DateInterval('PT' . self::EXPIRATION_INTERVAL . 'S'));
         } catch (Exception) {
         }
-        $this->setExpiry($now);
+        $this->expiry = $now;
 
         $database = Database::getInstance();
-        $database->where('id', $this->getSessionId());
+        $database->where('id', $this->getId());
         $database->update(
             'sessions',
             [
@@ -161,10 +171,10 @@ class Session
             // this MAY enable a concurrent prolonging request to be fulfilled.
             // but this actually happening is beyond any reason (don't quote me on that)
         }
-        $this->setExpiry($now);
+        $this->expiry = $now;
 
         $database = Database::getInstance();
-        $database->where('id', $this->getSessionId());
+        $database->where('id', $this->getId());
         $database->update(
             'sessions',
             [
@@ -183,7 +193,7 @@ class Session
     public function isExpired(): bool
     {
         $now = new Date('now');
-        $expiry = clone $this->getExpiry();
+        $expiry = clone $this->expiry;
         try {
             $expiry->add(new DateInterval('PT' . self::EXPIRATION_LEEWAY . 'S'));
         } catch (Exception) {
@@ -194,38 +204,6 @@ class Session
         }
 
         return false;
-    }
-
-    /**
-     * @param Date $creation
-     */
-    public function setCreation(Date $creation): void
-    {
-        $this->creation = $creation;
-    }
-
-    /**
-     * @param Date $expiry
-     */
-    public function setExpiry(Date $expiry): void
-    {
-        $this->expiry = $expiry;
-    }
-
-    /**
-     * @param string|null $sessionId
-     */
-    public function setSessionId(?string $sessionId): void
-    {
-        $this->sessionId = $sessionId;
-    }
-
-    /**
-     * @param oldUser|null $user
-     */
-    public function setUser(?oldUser $user): void
-    {
-        $this->user = $user;
     }
 
     /**
@@ -245,19 +223,21 @@ class Session
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getSessionId(): ?string
+    public function getId(): string
     {
-        return $this->sessionId;
+        return $this->id;
     }
 
     /**
-     * @return oldUser|null
+     * @return \IOL\SSO\v1\Session\GlobalSession
      */
-    public function getUser(): ?oldUser
+    public function getGlobalSession(): GlobalSession
     {
-        return $this->user;
+        return $this->globalSession;
     }
+
+
 
 }

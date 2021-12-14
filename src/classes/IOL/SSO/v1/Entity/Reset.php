@@ -39,7 +39,7 @@ class Reset
                 throw new InvalidValueException('Invalid Reset ID');
             }
             $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
-            $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . '/auth/reset-password/';
+            $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . '/set-password/';
         }
     }
 
@@ -95,5 +95,13 @@ class Reset
     public function getHash(): string
     {
         return md5(Environment::get('RESET_HASH') . $this->id);
+    }
+
+    /**
+     * @return \IOL\SSO\v1\Entity\User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
     }
 }

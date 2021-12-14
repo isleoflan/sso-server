@@ -21,12 +21,7 @@ $input = $response->getRequestData([
         'required' => true,
         'errorCode' => 103001,
     ],
-    [
-        'name' => 'scope',
-        'types' => ['integer'],
-        'required' => true,
-        'errorCode' => 103002,
-    ],
+
 ]);
 
 $app = App::getCurrent();
@@ -34,13 +29,11 @@ if (!$app->checkRedirectURL($input['redirectURL'])) {
     $response->addError(102001)->render();
 }
 
-$scope = new \IOL\SSO\v1\BitMasks\Scope($input['scope']);
 
 $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest();
 $requestId = $loginRequest->createNew(
     app: $app,
     redirectURL: $input['redirectURL'],
-    scope: $scope
 );
 
-$response->addData('redirect', $_ENV['FRONTEND_BASE_URL'] . $requestId);
+$response->addData('redirect', $_ENV['FRONTEND_BASE_URL'] . 'request/' . $requestId);

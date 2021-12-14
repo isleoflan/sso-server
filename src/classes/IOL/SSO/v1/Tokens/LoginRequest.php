@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace IOL\SSO\v1\Tokens;
 
-use IOL\SSO\v1\BitMasks\Scope;
 use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
@@ -22,7 +21,6 @@ class LoginRequest
     private string $id;
     private App $app;
     private string $redirectURL;
-    private Scope $scope;
 
     /**
      * @throws NotFoundException
@@ -51,14 +49,12 @@ class LoginRequest
         $this->id = $values['id'];
         $this->app = new App($values['app_id']);
         $this->redirectURL = $values['redirect_url'];
-        $this->scope = new Scope($values['scope']);
     }
 
-    public function createNew(App $app, string $redirectURL, Scope $scope): string
+    public function createNew(App $app, string $redirectURL): string
     {
         $this->app = $app;
         $this->redirectURL = $redirectURL;
-        $this->scope = $scope;
 
         $this->id = UUID::newId(self::DB_TABLE);
 
@@ -67,7 +63,6 @@ class LoginRequest
             'id' => $this->id,
             'app_id' => $this->app->getId(),
             'redirect_url' => $this->redirectURL,
-            'scope' => $this->scope->getIntegerValue(),
             'created' => Date::now(Date::DATETIME_FORMAT_MICRO),
         ]);
 

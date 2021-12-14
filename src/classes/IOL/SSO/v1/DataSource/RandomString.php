@@ -16,4 +16,31 @@ class RandomString
         }
         return $randomString;
     }
+
+    public static function isValid(string $string): bool
+    {
+        foreach(str_split($string) as $char){
+            if(!str_contains(self::CHARS, $char)){ return false;}
+        }
+        return true;
+    }
+
+
+    public static function idExists(string $string, string $table, string $field): bool
+    {
+        $database = Database::getInstance();
+        $database->where($field, $string);
+        $data = $database->get($table);
+
+        return isset($data[0][$field]);
+    }
+
+    public static function newId(string $table, string $field, int $length = 80): string
+    {
+        do {
+            $string = self::generate($length);
+        } while (self::idExists($string, $table, $field));
+
+        return $string;
+    }
 }
