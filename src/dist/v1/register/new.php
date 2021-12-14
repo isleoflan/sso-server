@@ -70,13 +70,13 @@ $input = $response->getRequestData([
     ],
     [
         'name' => 'zipCode',
-        'types' => ['string'],
+        'types' => ['int'],
         'required' => true,
         'errorCode' => 105107,
     ],
     [
         'name' => 'city',
-        'types' => ['int'],
+        'types' => ['string'],
         'required' => true,
         'errorCode' => 105108,
     ],
