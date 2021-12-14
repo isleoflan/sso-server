@@ -35,7 +35,7 @@ class User
     private string $foreName;
     private string $lastName;
     private string $address;
-    private string $zipCode;
+    private int $zipCode;
     private string $city;
     private Date $birthDate;
     private Email $email;
@@ -154,7 +154,7 @@ class User
         string       $foreName,
         string       $lastName,
         string       $address,
-        string       $zipCode,
+        int          $zipCode,
         string       $city,
         Date         $birthDate,
         Email        $email,
