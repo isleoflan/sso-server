@@ -61,7 +61,7 @@ jobs:
             openssl rsa -in intermediatePrivate.pem -outform PEM -pubout -out intermediatePublic.pem
             openssl genrsa -out authPrivate.pem 4096
             openssl rsa -in authPrivate.pem -outform PEM -pubout -out authPublic.pem
-            chmod 0755 intermediateP*
+            chmod 0755 *.pem
             composer install
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
@@ -79,7 +79,7 @@ jobs:
             rm -rf tests
             rm -rf vendor
             rm codeception.yml
-            rm intermediateP*
+            rm *.pem
             composer install --no-dev
             cd ..
             rm "${{ secrets.SSO_BASE_PATH }}live"
@@ -87,8 +87,7 @@ jobs:
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
             cd live
             date +"%V.%u-%k%M" > classes/IOL/SSO/v1/VERSION.vsf
-            cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/intermediateP* .
-            cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/authP* .
+            cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
       
       
      # - name: end maintenance mode
