@@ -8,6 +8,10 @@ use IOL\SSO\v1\DataSource\File;
 use IOL\SSO\v1\DataType\UUID;
 use IOL\SSO\v1\Entity\oldUser;
 use Exception;
+use IOL\SSO\v1\Entity\User;
+use IOL\SSO\v1\Exceptions\InvalidValueException;
+use IOL\SSO\v1\Exceptions\IOLException;
+use IOL\SSO\v1\Exceptions\NotFoundException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use Nowakowskir\JWT\JWT;
@@ -17,11 +21,11 @@ use Nowakowskir\JWT\TokenEncoded;
 class Authentication
 {
     public const JWT_SESSION_KEY = 'ses';
-    private const JWT_PUBLIC_KEY = '/public.pub';
-    private const JWT_PRIVATE_KEY = '/private.key';
+    private const JWT_PUBLIC_KEY = '/authPublic.pem';
+    private const JWT_PRIVATE_KEY = '/authPrivate.pem';
     private const JWT_ALGORITHM = JWT::ALGORITHM_RS256;
 
-    private static oldUser $user;
+    private static User $user;
     private static ?Session $session = null;
     private static bool $authResult;
 
@@ -29,7 +33,7 @@ class Authentication
         'success' => 'bool',
         'object' => 'oldUser|Error',
     ])]
-    public static function authenticate(): oldUser
+    public static function authenticate(): User
     {
         $session = self::getSessionFromRequest();
 
@@ -37,7 +41,7 @@ class Authentication
             // The session is valid and still in time.
             // renew the session for further usage
             $session->renew();
-            $user = $session->getUser();
+            $user = $session->getGlobalSession()->getUser();
 
             // if no user is attached to said session, cancel execution and throw an error
             if (is_null($user)) {
@@ -93,18 +97,18 @@ class Authentication
 
         if (isset($payload[self::JWT_SESSION_KEY])) {
             $session_id = $payload[self::JWT_SESSION_KEY];
-            if (UUID::isValid($session_id)) {
-                $session = new Session(sessionId: $session_id);
-
-                if ($session->sessionExists()) {
-                    self::$session = $session;
-
-                    return $session;
-                }
-                // The provided session id is not stored in DB, therefore is not valid
+            try {
+                $session = new Session(id: $session_id);
+            } catch (IOLException) {
                 APIResponse::getInstance()->addError(100002)->render();
             }
-            // the provided session id is not a valid UUID
+
+            if ($session->sessionExists()) {
+                self::$session = $session;
+
+                return $session;
+            }
+            // The provided session id is not stored in DB, therefore is not valid
             APIResponse::getInstance()->addError(100002)->render();
         }
         // no session key is found in payload
@@ -115,7 +119,7 @@ class Authentication
     public static function getSessionId(): ?string
     {
         if (isset(self::$session)) {
-            return self::$session->getSessionId();
+            return self::$session->getId();
         }
         return '';
     }
@@ -131,7 +135,7 @@ class Authentication
         return $encodedToken->toString();
     }
 
-    public static function getCurrentUser(): ?oldUser
+    public static function getCurrentUser(): ?User
     {
         if (!self::isAuthenticated()) {
             self::authenticate();

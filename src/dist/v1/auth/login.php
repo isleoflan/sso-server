@@ -91,7 +91,7 @@ $intermediateToken = new IntermediateToken();
 try {
     $token = $intermediateToken->createNew(
         app: $app,
-        user: $user
+        globalSession: $user->getGlobalSession()
     );
 } catch (\IOL\SSO\v1\Exceptions\EncryptionException $e) {
     APIResponse::getInstance()->addData('err', $e->getMessage());

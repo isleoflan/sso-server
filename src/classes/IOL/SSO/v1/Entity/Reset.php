@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace IOL\SSO\v1\Entity;
 
+use IOL\SSO\v1\Content\Mail;
 use IOL\SSO\v1\DataSource\Database;
+use IOL\SSO\v1\DataSource\Environment;
 use IOL\SSO\v1\DataSource\Queue;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
@@ -24,6 +26,8 @@ class Reset
     private Date $created;
     private LoginRequest $loginRequest;
 
+    private /*readonly*/ string $USER_RESET_URL;
+
     /**
      * @throws InvalidValueException
      */
@@ -35,6 +39,7 @@ class Reset
                 throw new InvalidValueException('Invalid Reset ID');
             }
             $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
+            $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . '/set-password/';
         }
     }
 
@@ -71,5 +76,32 @@ class Reset
 
         $resetQueue = new Queue(new QueueType(QueueType::ALL_USER));
         $resetQueue->publishMessage($this->id, new QueueType(QueueType::RESET_USER));
+    }
+
+    public function sendResetMail()
+    {
+        $mail = new Mail();
+        $mail->setReceiver($this->user->getEmail());
+        $mail->setSubject('Passwort zurücksetzen');
+        $mail->setTemplate('register');
+        $mail->addVariable('preheader', '');
+        $mail->addVariable('expiration', (self::EXPIRATION / 60) . ' Minuten');
+        $mail->addVariable('reseturl', $this->USER_RESET_URL . $this->getHash());
+
+        $mailerQueue = new Queue(new QueueType(QueueType::MAILER));
+        $mailerQueue->publishMessage(json_encode($mail), new QueueType(QueueType::MAILER));
+    }
+
+    public function getHash(): string
+    {
+        return md5(Environment::get('RESET_HASH') . $this->id);
+    }
+
+    /**
+     * @return \IOL\SSO\v1\Entity\User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
     }
 }

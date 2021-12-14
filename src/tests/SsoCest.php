@@ -11,7 +11,7 @@ class SsoCest
 
     // tests
 
-
+/*
     public function createRequest(ApiTester $I)
     {
         $I->haveHttpHeader('IOL-App-Token','e9fca7d0-b02d-40bd-bad8-3fb3c76b9096');
