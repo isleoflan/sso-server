@@ -89,7 +89,7 @@ class User
         $this->foreName = $values['forename'];
         $this->lastName = $values['lastname'];
         $this->address = $values['address'];
-        $this->zipCode = $values['zip_code'];
+        $this->zipCode = (int)$values['zip_code'];
         $this->city = $values['city'];
         $this->birthDate = new Date($values['birth_date']);
         $this->email = new Email($values['email']);
