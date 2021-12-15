@@ -11,7 +11,7 @@ use IOL\SSO\v1\Tokens\IntermediateToken;
 $response = APIResponse::getInstance();
 
 $response->setAllowedRequestMethods(
-    new RequestMethod(RequestMethod::POST)
+    new RequestMethod(RequestMethod::PATCH)
 );
 $response->needsAuth(false);
 $response->isSSOFrontendOnly(true);
