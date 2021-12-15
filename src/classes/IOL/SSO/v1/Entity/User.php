@@ -75,6 +75,7 @@ class User
     public function loadData(array|false $values): void
     {
         if (!$values || count($values) === 0) {
+            var_dump($values);
             throw new NotFoundException('User could not be loaded');
         }
 
@@ -275,8 +276,6 @@ class User
     public function fetchByConfirmationHash(string $hash): void
     {
         $data = Database::getRow('MD5(CONCAT(username, "' . Environment::get('DOI_SALT') . '"))', $hash, self::DB_TABLE);
-        $dat = Database::getInstance();
-        var_dump($dat->getLastQuery());
         $this->loadData($data);
     }
 
