@@ -72,9 +72,8 @@ class Database extends MysqliDb
         $database = Database::getInstance();
         $database->where($columnName, $columnValue);
         $data = $database->get($table, [0, 1]);
-        var_dump($data);
 
-        return isset($data[0][$columnName]) ? $data[0] : false;
+        return $data[0] ?? false;
     }
 
     public function insert($tableName, $insertData): bool

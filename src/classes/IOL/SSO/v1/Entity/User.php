@@ -75,7 +75,6 @@ class User
     public function loadData(array|false $values): void
     {
         if (!$values || count($values) === 0) {
-            var_dump($values);
             throw new NotFoundException('User could not be loaded');
         }
 
