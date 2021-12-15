@@ -30,9 +30,13 @@ $user = new User();
 
 try {
     $user->fetchByConfirmationHash($input['hash']);
+    $user->setGlobalSession();
 } catch (NotFoundException) {
     $response->addError(105201)->render();
 }
+    $globalSession = new \IOL\SSO\v1\Session\GlobalSession();
+    $globalSession->createNew($user);
+    $user->setGlobalSession($globalSession);
 
 $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest();
 try {
