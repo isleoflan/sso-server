@@ -19,7 +19,7 @@ $response->isSSOFrontendOnly(true);
 $response->check();
 $input = $response->getRequestData([
     [
-        'name' => 'doi',
+        'name' => 'hash',
         'types' => ['string'],
         'required' => true,
         'errorCode' => 105201,
@@ -29,7 +29,7 @@ $input = $response->getRequestData([
 $user = new User();
 
 try {
-    $user->fetchByConfirmationHash($input['doi']);
+    $user->fetchByConfirmationHash($input['hash']);
 } catch (NotFoundException) {
     $response->addError(105201)->render();
 }
