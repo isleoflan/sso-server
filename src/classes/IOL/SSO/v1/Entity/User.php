@@ -326,5 +326,13 @@ class User
         return $this->scope;
     }
 
+    /**
+     * @param \IOL\SSO\v1\Session\GlobalSession|null $globalSession
+     */
+    public function setGlobalSession(?GlobalSession $globalSession): void
+    {
+        $this->globalSession = $globalSession;
+    }
+
 
 }
