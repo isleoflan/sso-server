@@ -93,8 +93,7 @@ class LoginRequest
     public function loadAllocation(User $user): void
     {
         $database = Database::getInstance();
-        $database->where('user_id', $user->getId());
-        $data = $database->get(self::DB_TABLE_ALLOC);
+        $data = $database->query('SELECT r.* FROM '.self::DB_TABLE_ALLOC.' a INNER JOIN '.self::DB_TABLE.' r ON r.id = a.login_request_id WHERE a.user_id = "'.$user->getId().'"');
         $this->loadData($data[0]);
     }
 
