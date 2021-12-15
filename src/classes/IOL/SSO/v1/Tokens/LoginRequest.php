@@ -95,7 +95,7 @@ class LoginRequest
         $database = Database::getInstance();
         $database->where('user_id', $user->getId());
         $data = $database->get(self::DB_TABLE_ALLOC);
-        $this->loadData($data);
+        $this->loadData($data[0]);
     }
 
     #[Pure]
