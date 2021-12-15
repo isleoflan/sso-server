@@ -30,7 +30,6 @@ $user = new User();
 
 try {
     $user->fetchByConfirmationHash($input['hash']);
-    $user->setGlobalSession();
 } catch (NotFoundException) {
     $response->addError(105201)->render();
 }
