@@ -94,6 +94,8 @@ class LoginRequest
     {
         $database = Database::getInstance();
         $data = $database->query('SELECT r.* FROM '.self::DB_TABLE_ALLOC.' a INNER JOIN '.self::DB_TABLE.' r ON r.id = a.login_request_id WHERE a.user_id = "'.$user->getId().'"');
+        var_dump($data);
+        var_dump($database->getLastQuery());
         $this->loadData($data[0]);
     }
 
