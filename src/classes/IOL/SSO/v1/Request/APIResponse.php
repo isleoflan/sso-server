@@ -397,6 +397,7 @@ class APIResponse
             $methods = implode(',', array_values($this->getAllowedRequestMethods()->getValues()));
             http_response_code(204);
             header('Allow: OPTIONS,' . $methods);
+            header('Access-Control-Allow-Methods: OPTIONS,' . $methods);
             header('Content-Type: ' . $this->returnType . '; charset=utf-8');
             $this->sendCORSHeader();
             $this->responseSent = true;
