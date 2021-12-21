@@ -60,6 +60,7 @@ jobs:
             openssl rsa -in authPrivate.pem -outform PEM -pubout -out authPublic.pem
             chmod 0755 *.pem
             composer install
+            php ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/statuspage.php maintenance schedule --title "Updating SSO API to newest version" --description $'We\'re updating the SSO API, so we can provide you with new features (and possibly bugs).\r\nAs we\'re using atomic deployments, no interruption should be perceivable.\r\nWhen the update is done, this maintenance message will automatically be resolved.' --component "${{ secrets.SSO_STATUSPAGE_COMPONENT_ID }}" --start $(date --date='1 minute' --iso-8601=seconds) --end $(date --date='10 minutes' --iso-8601=seconds) --incident-status "in_progress"
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
       - name: if tests successful, update symlink of live and remove staging link, restart consumer
