@@ -22,12 +22,12 @@ class GlobalSession
     public const DB_TABLE = 'global_session';
 
     /**
-     * Defines after which amount of seconds, without being renewed, the session is being invalidated.
-     * This is set to 2'592'000 seconds, which equals to 30 days (30*24*60*60)
+     * Defines after which amount of days, without being renewed, the session is being invalidated.
+     * This is set to 30 days
      *
      * @see Session::EXPIRATION_LEEWAY
      */
-    public const EXPIRATION_INTERVAL = 2592000;
+    public const EXPIRATION_INTERVAL = 30;
 
     /**
      * Defines the "wiggle room" in seconds, before the invalidation of the session is really taking place.
@@ -94,7 +94,7 @@ class GlobalSession
 
         $this->created = new Date('now');
         $this->expiration = clone $this->created;
-        $this->expiration->add(new \DateInterval('PT' . self::EXPIRATION_INTERVAL . 'S'));
+        $this->expiration->add(new \DateInterval('P' . self::EXPIRATION_INTERVAL . 'D'));
         $this->id = UUID::newId(self::DB_TABLE);
 
         $database->insert(self::DB_TABLE, [
