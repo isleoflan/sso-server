@@ -22,7 +22,7 @@ jobs:
       
       - name: create new folder with current timestamp
         uses: appleboy/ssh-action@master
-        with: 
+        with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -60,7 +60,7 @@ jobs:
             openssl rsa -in authPrivate.pem -outform PEM -pubout -out authPublic.pem
             chmod 0755 *.pem
             composer install
-            php ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/statuspage.php maintenance schedule --title "Updating SSO API to newest version" --description $'We\'re updating the SSO API, so we can provide you with new features (and possibly bugs).\r\nAs we\'re using atomic deployments, no interruption should be perceivable.\r\nWhen the update is done, this maintenance message will automatically be resolved.' --component "${{ secrets.SSO_STATUSPAGE_COMPONENT_ID }}" --start $(date --date='1 minute' --iso-8601=seconds) --end $(date --date='10 minutes' --iso-8601=seconds) --incident-status "in_progress" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
+            echo -n "::set-output name=INCIDENT_ID::" && php ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/statuspage.php maintenance schedule --title "Updating SSO API to newest version" --description $'We\'re updating the SSO API, so we can provide you with new features (and possibly bugs).\r\nAs we\'re using atomic deployments, no interruption should be perceivable.\r\nWhen the update is done, this maintenance message will automatically be resolved.' --component "${{ secrets.SSO_STATUSPAGE_COMPONENT_ID }}" --start $(date --date='1 minute' --iso-8601=seconds) --end $(date --date='10 minutes' --iso-8601=seconds) --incident-status "in_progress" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
             ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
       - name: if tests successful, update symlink of live and remove staging link, restart consumer
@@ -88,6 +88,15 @@ jobs:
             cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
       
       
-     # - name: end maintenance mode
+      - name: end maintenance mode
+        if: always()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo ${{ steps.testing.outputs.INCIDENT_ID }}
       
       
