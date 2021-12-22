@@ -100,6 +100,6 @@ jobs:
       - name: end maintenance mode
         if: always()
         run: |
-          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --description "The update has been completed. Thank you for your patience and sorry for the possible inconveniences. THE SSO API is now running again as intended" --incident-status "completed" --api-key "${{ secrets.STATUSPAGE_API_KEY }}" --page-id "${{ secrets.STATUSPAGE_PAGE_ID }}"
+          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --description "The update has been completed. Thank you for your patience and sorry for the possible inconveniences. The SSO API is now running again as intended" --incident-status "completed" --api-key "${{ secrets.STATUSPAGE_API_KEY }}" --page-id "${{ secrets.STATUSPAGE_PAGE_ID }}"
       
       
