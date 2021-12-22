@@ -1,7 +1,6 @@
 {
   "name": "isleoflan/sso-server",
   "description": "This package provides the SSO server for all IOL services",
-  "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
