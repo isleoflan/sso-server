@@ -184,10 +184,11 @@ class APIResponse
 
     public function check(): ?oldUser
     {
+        $this->checkForOptionsMethod();
+
         if (!$this->isSsoFrontendOnly()) {
             $this->checkForAppHeader();
         }
-        $this->checkForOptionsMethod();
 
         if (!$this->getAllowedRequestMethods()->isAllowed(self::getRequestMethod())) {
             $this->addError(100004)->render();
