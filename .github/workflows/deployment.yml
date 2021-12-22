@@ -24,7 +24,7 @@ jobs:
         run: |
           composer init --stability="dev"
           composer require "stui/statuspage-io:v0.0.4"
-          echo -n "::set-output name=INCIDENT_ID::" && php vendor/bin/statuspage.php maintenance schedule --title "Updating SSO API to newest version" --description $'We\'re updating the SSO API, so we can provide you with new features (and possibly bugs).\r\nAs we\'re using atomic deployments, no interruption should be perceivable.\r\nWhen the update is done, this maintenance message will automatically be resolved.' --component "${{ secrets.SSO_STATUSPAGE_COMPONENT_ID }}" --start $(date --date='1 minute' --iso-8601=seconds) --end $(date --date='10 minutes' --iso-8601=seconds) --incident-status "in_progress" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
+          echo -n "::set-output name=INCIDENT_ID::" && php vendor/bin/statuspage.php maintenance schedule --title "Updating SSO API to newest version" --description $'We\'re updating the SSO API, so we can provide you with new features (and possibly bugs).\r\nAs we\'re using atomic deployments, no interruption should be perceivable.\r\nWhen the update is done, this maintenance message will automatically be resolved.' --component "${{ secrets.STATUSPAGE_COMPONENT_ID }}" --start $(date --date='1 minute' --iso-8601=seconds) --end $(date --date='10 minutes' --iso-8601=seconds) --incident-status "in_progress" --api-key "${{ secrets.STATUSPAGE_API_KEY }}" --page-id "${{ secrets.STATUSPAGE_PAGE_ID }}"
 
       - name: get current timestamp
         id: deployment-id
@@ -38,8 +38,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            mkdir "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
-            cp "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/.env" "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/.env"
+            mkdir "${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+            cp "${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/.env" "${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/.env"
       
       - name: upload to new folder
         uses: easingthemes/ssh-deploy@main
@@ -48,7 +48,7 @@ jobs:
           SOURCE: src/
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+          TARGET: "${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
           EXCLUDE: "/sql/, .env.example, README.md"
       
       - name: Install composer packages, link to staging env and test on staging
@@ -60,9 +60,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ${{ secrets.SSO_BASE_PATH }}
+            cd ${{ secrets.BASE_PATH }}
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" staging
-            cd "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
+            cd "${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
             sed -i 's/http:\/\/localhost/https:\/\/staging.api.sso.isleoflan.ch/g' codeception.yml
             openssl genrsa -out intermediatePrivate.pem 4096
             openssl rsa -in intermediatePrivate.pem -outform PEM -pubout -out intermediatePublic.pem
@@ -70,7 +70,7 @@ jobs:
             openssl rsa -in authPrivate.pem -outform PEM -pubout -out authPublic.pem
             chmod 0755 *.pem
             composer install
-            ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
+            ${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}/vendor/bin/codecept run tests -vv
       
       - name: if tests successful, update symlink of live and remove staging link, restart consumer
         if: success()
@@ -81,7 +81,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ${{ secrets.SSO_BASE_PATH }}
+            cd ${{ secrets.BASE_PATH }}
             cd staging
             rm -rf tests
             rm -rf vendor
@@ -89,17 +89,17 @@ jobs:
             rm *.pem
             composer install --no-dev
             cd ..
-            rm "${{ secrets.SSO_BASE_PATH }}live"
-            rm "${{ secrets.SSO_BASE_PATH }}staging"
+            rm "${{ secrets.BASE_PATH }}live"
+            rm "${{ secrets.BASE_PATH }}staging"
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
             cd live
             date +"%V.%u-%k%M" > classes/IOL/SSO/v1/VERSION.vsf
-            cp ${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
+            cp ${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
       
       
       - name: end maintenance mode
         if: always()
         run: |
-          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --description "The update has been completed. Thank you for your patience and sorry for the possible inconveniences. THE SSO API is now running again as intended" --incident-status "completed" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
+          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --description "The update has been completed. Thank you for your patience and sorry for the possible inconveniences. THE SSO API is now running again as intended" --incident-status "completed" --api-key "${{ secrets.STATUSPAGE_API_KEY }}" --page-id "${{ secrets.STATUSPAGE_PAGE_ID }}"
       
       
