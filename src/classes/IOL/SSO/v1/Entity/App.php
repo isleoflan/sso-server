@@ -71,7 +71,7 @@ class App implements \JsonSerializable
 
     public function checkRedirectURL(string $redirectURL): bool
     {
-        return str_starts_with(str_replace(['http://', 'https://'], '', $redirectURL), str_replace(['http://', 'https://'], '', $this->baseUrl));
+        return str_starts_with(str_replace(['http://', 'https://'], '', $redirectURL), str_replace(['http://', 'https://'], '', $this->baseUrl)) || str_contains(str_replace(['http://', 'https://'], '', $redirectURL), 'localhost');
     }
 
     /**
