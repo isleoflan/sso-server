@@ -1,11 +1,7 @@
 name: Deployment
 on:
-  pull_request:
-    branches: [ master ]
   push:
     branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -104,6 +100,6 @@ jobs:
       - name: end maintenance mode
         if: always()
         run: |
-          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --incident-status "completed" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
+          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --description "The update has been completed. Thank you for your patience and sorry for the possible inconveniences. THE SSO API is now running again as intended" --incident-status "completed" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
       
       
