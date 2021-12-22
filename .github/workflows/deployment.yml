@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: start maintenance mode
+      - name: setup local php
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
@@ -55,7 +55,7 @@ jobs:
           TARGET: "${{ secrets.SSO_BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}"
           EXCLUDE: "/sql/, .env.example, README.md"
       
-      - name: Install composer packages, start maintenance mode on statuspage, link to staging env, test on staging
+      - name: Install composer packages, link to staging env and test on staging
         id: testing
         uses: appleboy/ssh-action@master
         with: 
@@ -104,6 +104,6 @@ jobs:
       - name: end maintenance mode
         if: always()
         run: |
-          echo ${{ steps.statuspage.outputs.INCIDENT_ID }}
+          php vendor/bin/statuspage.php maintenance update --incident "${{ steps.statuspage.outputs.INCIDENT_ID }}" --incident-status "completed" --api-key "${{ secrets.SSO_STATUSPAGE_API_KEY }}" --page-id "${{ secrets.SSO_STATUSPAGE_PAGE_ID }}"
       
       
