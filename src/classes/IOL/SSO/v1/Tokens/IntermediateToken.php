@@ -155,7 +155,7 @@ class IntermediateToken
 
         $checksum = $this->calculateChecksum($token);
 
-        return $token . '*' . str_replace('=', '', Base64::encode(dechex($checksum)));
+        return $token . '.' . str_replace('=', '', Base64::encode(dechex($checksum)));
     }
 
     private function calculateChecksum(string $token): int
@@ -179,7 +179,7 @@ class IntermediateToken
             throw new NotFoundException('Token does not exist');
         }
 
-        [$token, $checksum] = explode('*', $token);
+        [$token, $checksum] = explode('.', $token);
 
         if (Base64::encode(Base64::decode($token)) !== $token) {
             throw new InvalidValueException('Provided token is not of any valid format');

@@ -8,12 +8,14 @@ use DateInterval;
 use DateTime;
 use Exception;
 use IOL\SSO\v1\DataSource\Database;
+use IOL\SSO\v1\Request\IPAddress;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
 use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
+use IOL\SSO\v1\Request\UserAgent;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 
@@ -49,7 +51,11 @@ class GlobalSession
     private string $id;
     private User $user;
     private Date $created;
+    private Date $lastSeen;
     private Date $expiration;
+
+    private IPAddress $IPAddress;
+    private UserAgent $userAgent;
 
     /**
      * @throws InvalidValueException
@@ -77,31 +83,36 @@ class GlobalSession
         $this->id = $values['id'];
         $this->user = new User($values['user_id']);
         $this->created = new Date($values['created']);
+        $this->lastSeen = new Date($values['last_seen']);
         $this->expiration = new Date($values['expiration']);
+        $this->IPAddress = new IPAddress($values['ipaddress']);
+        $this->userAgent = new UserAgent($values['user_agent']);
     }
 
     public function createNew(User $user): string
     {
         $database = Database::getInstance();
 
+        $this->id = UUID::newId(self::DB_TABLE);
         $this->user = $user;
 
         $database->where('user_id', $this->user->getId());
-        foreach ($database->get(self::DB_TABLE) as $existingGlobalSession) {
-            $existingGlobalSession = new GlobalSession($existingGlobalSession['id']);
-            $existingGlobalSession->revoke();
-        }
 
         $this->created = new Date('now');
+        $this->lastSeen = clone $this->created;
         $this->expiration = clone $this->created;
         $this->expiration->add(new \DateInterval('P' . self::EXPIRATION_INTERVAL . 'D'));
-        $this->id = UUID::newId(self::DB_TABLE);
+        $this->IPAddress = new IPAddress();
+        $this->userAgent = new UserAgent();
 
         $database->insert(self::DB_TABLE, [
             'id' => $this->id,
             'user_id' => $this->user->getId(),
             'created' => $this->created->format(Date::DATETIME_FORMAT_MICRO),
+            'last_seen' => $this->lastSeen->format(Date::DATETIME_FORMAT_MICRO),
             'expiration' => $this->expiration->format(Date::DATETIME_FORMAT_MICRO),
+            'ip_address' => $this->IPAddress->getAddress(),
+            'user_agent' => $this->userAgent->getAgent(),
         ]);
 
         return $this->id;
