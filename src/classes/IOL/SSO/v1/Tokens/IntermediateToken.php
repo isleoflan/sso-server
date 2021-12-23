@@ -181,7 +181,7 @@ class IntermediateToken
 
         [$token, $checksum] = explode('.', $token);
 
-        if (Base64::encode(Base64::decode($token)) !== $token) {
+        if (str_replace('=', '',Base64::encode(Base64::decode($token))) !== $token) {
             throw new InvalidValueException('Provided token is not of any valid format');
         }
 
