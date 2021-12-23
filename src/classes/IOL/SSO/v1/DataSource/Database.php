@@ -28,7 +28,7 @@ class Database extends MysqliDb
         for ($returnDirs = 0; $returnDirs < 4; $returnDirs++) {
             $basePath = substr($basePath, 0, strrpos($basePath, '/'));
         }
-        $this->SQLERROR_LOG_PATH = $basePath . '/log/sql/';
+        $this->SQLERROR_LOG_PATH = $basePath . '../../log/sql/';
     }
 
     protected function __clone()

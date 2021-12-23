@@ -29,5 +29,8 @@ try {
 } catch (\IOL\SSO\v1\Exceptions\IOLException $e) {
     $response->addError(103001)->render();
 }
+if (!$globalSession->isValid()) {
+    APIResponse::getInstance()->addError(104002)->render();
+}
 
 $response->setData($globalSession->getInfo());

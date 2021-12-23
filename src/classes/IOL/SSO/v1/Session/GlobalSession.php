@@ -96,8 +96,6 @@ class GlobalSession
         $this->id = UUID::newId(self::DB_TABLE);
         $this->user = $user;
 
-        $database->where('user_id', $this->user->getId());
-
         $this->created = new Date('now');
         $this->lastSeen = clone $this->created;
         $this->expiration = clone $this->created;
