@@ -163,7 +163,7 @@ class GlobalSession
     {
         $now = new Date('now');
         try {
-            $now->add(new DateInterval('PT' . self::EXPIRATION_INTERVAL . 'S'));
+            $now->add(new DateInterval('P' . self::EXPIRATION_INTERVAL . 'D'));
         } catch (Exception) {
         }
         $this->expiration = $now;

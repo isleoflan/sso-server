@@ -80,6 +80,8 @@ if (isset($input['username']) && $input['username'] !== '' && isset($input['pass
     if (!$globalSession->isValid()) {
         APIResponse::getInstance()->addError(104002)->render();
     }
+
+    $globalSession->refresh();
     $user = $globalSession->getUser();
     $user->setGlobalSession($globalSession);
 } else {
@@ -100,6 +102,8 @@ try {
 }
 
 $redirectURL = $loginRequest->redeem();
+
+
 APIResponse::getInstance()->addData('redirect', $redirectURL . $token);
 
 if ($addGlobalSessionToResponse) {
