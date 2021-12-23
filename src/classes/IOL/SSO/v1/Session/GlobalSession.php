@@ -85,7 +85,7 @@ class GlobalSession
         $this->created = new Date($values['created']);
         $this->lastSeen = new Date($values['last_seen']);
         $this->expiration = new Date($values['expiration']);
-        $this->IPAddress = new IPAddress($values['ipaddress']);
+        $this->IPAddress = new IPAddress($values['ip_address']);
         $this->userAgent = new UserAgent($values['user_agent']);
     }
 
