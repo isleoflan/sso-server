@@ -19,7 +19,7 @@ class IntermediateToken
 {
     public const DB_TABLE = 'intermediate_token';
 
-    private const TOKEN_LIFETIME = 60;
+    private const TOKEN_LIFETIME = 180;
 
     private int $encryptionBlockSize = 200;
     private int $decryptionBlockSize = 256;
@@ -151,7 +151,7 @@ class IntermediateToken
             $encryptedData .= $encryptedChunk;
         }
 
-        $token = Base64::encode($encryptedData);
+        $token = str_replace('=', '',Base64::encode($encryptedData));
 
         $checksum = $this->calculateChecksum($token);
 
