@@ -1,14 +1,12 @@
 <?php
-    // exchanges the intermediate key to a full JWT
 
     declare(strict_types=1);
 
     use IOL\SSO\v1\BitMasks\RequestMethod;
     use IOL\SSO\v1\DataType\Date;
-    use IOL\SSO\v1\Entity\App;
+    use IOL\SSO\v1\Exceptions\IOLException;
     use IOL\SSO\v1\Request\APIResponse;
     use IOL\SSO\v1\Request\Authentication;
-    use IOL\SSO\v1\Session\GlobalSession;
     use IOL\SSO\v1\Tokens\RefreshToken;
 
     $response = APIResponse::getInstance();
@@ -28,34 +26,22 @@
                                            ],
                                        ]);
 
-    $intermediateToken = new \IOL\SSO\v1\Tokens\IntermediateToken();
     try {
-        $decryptedToken = $intermediateToken->checkToken($input['token']);
-    } catch (\IOL\SSO\v1\Exceptions\IOLException) {
-        $response->addError(401001)->render();
+        $refreshToken = new RefreshToken($input['token']);
+    } catch (IOLException $e) {
+        $response->addError(501001)->render();
     }
 
-    try {
-        $app = new App($decryptedToken['appId']);
-    } catch (\IOL\SSO\v1\Exceptions\IOLException) {
-        $response->addError(401002)->render();
+    $session = $refreshToken->getSession();
+
+    $globalSession = $session->getGlobalSession();
+
+    if (!$globalSession->isValid()) {
+        $response->addError(501002)->render();
     }
 
-    try {
-        $globalSession = new GlobalSession($decryptedToken['gsId']);
-    } catch (\IOL\SSO\v1\Exceptions\IOLException) {
-        $response->addError(401003)->render();
-    }
-
-
-    $session = new \IOL\SSO\v1\Request\Session();
-    $session->create(globalSession: $globalSession, app: $app);
-
+    $session->renew();
     $accessToken = Authentication::createNewToken($session);
 
-    $refreshToken = new RefreshToken();
-    $refreshToken = $refreshToken->createNew($session);
-
     $response->addData('accessToken', $accessToken);
-    $response->addData('refreshToken', $refreshToken);
     $response->addData('expiration', $session->getExpiry()->format(Date::DATE_FORMAT_ISO));

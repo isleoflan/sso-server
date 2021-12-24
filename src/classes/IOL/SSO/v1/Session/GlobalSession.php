@@ -15,6 +15,7 @@ use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
+use IOL\SSO\v1\Request\Session;
 use IOL\SSO\v1\Request\UserAgent;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
@@ -162,9 +163,15 @@ class GlobalSession
         $database->update(
             'global_session',
             [
-                'expiration' => $now->sqldatetime(),
+                'expiration' => $now->format(Date::DATETIME_FORMAT_MICRO),
             ]
         );
+
+
+        $database->where('global_session_id', $this->getId());
+        $database->update(Session::DB_TABLE, [
+            'expiration' => $now->format(Date::DATETIME_FORMAT_MICRO)
+        ]);
     }
 
 
@@ -180,9 +187,9 @@ class GlobalSession
         $database = Database::getInstance();
         $database->where('id', $this->id);
         $database->update(
-            'global_session',
+            self::DB_TABLE,
             [
-                'expiration' => $now->sqldatetime(),
+                'expiration' => $now->format(Date::DATETIME_FORMAT_MICRO),
             ]
         );
     }

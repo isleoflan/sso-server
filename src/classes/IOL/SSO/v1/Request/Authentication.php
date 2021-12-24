@@ -21,6 +21,7 @@ use Nowakowskir\JWT\TokenEncoded;
 class Authentication
 {
     public const JWT_SESSION_KEY = 'ses';
+    public const JWT_ISSUE_KEY = 'iat';
     private const JWT_PUBLIC_KEY = '/authPublic.pem';
     private const JWT_PRIVATE_KEY = '/authPrivate.pem';
     private const JWT_ALGORITHM = JWT::ALGORITHM_RS256;
@@ -124,8 +125,13 @@ class Authentication
         return '';
     }
 
-    public static function createNewToken(array $data): string
+    public static function createNewToken(Session $session): string
     {
+        $data = [
+            self::JWT_ISSUE_KEY => time(),
+            self::JWT_SESSION_KEY => $session->getId()
+        ];
+
         $rawToken = new TokenDecoded($data);
         $encodedToken = $rawToken->encode(
             key: file_get_contents(File::getBasePath() . self::JWT_PRIVATE_KEY),
