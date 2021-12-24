@@ -81,7 +81,6 @@ if (isset($input['username']) && $input['username'] !== '' && isset($input['pass
         APIResponse::getInstance()->addError(104002)->render();
     }
 
-    $globalSession->refresh();
     $user = $globalSession->getUser();
     $user->setGlobalSession($globalSession);
 } else {

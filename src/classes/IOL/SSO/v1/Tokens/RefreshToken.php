@@ -57,4 +57,13 @@
 
             return $this->token;
         }
+
+        /**
+         * @return \IOL\SSO\v1\Request\Session
+         */
+        public function getSession(): Session
+        {
+            return $this->session;
+        }
+
     }
