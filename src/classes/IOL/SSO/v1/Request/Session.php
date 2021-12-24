@@ -148,11 +148,12 @@ class Session
         $database = Database::getInstance();
         $database->where('id', $this->getId());
         $database->update(
-            'sessions',
+            self::DB_TABLE,
             [
-                'expiration' => $now->sqldatetime(),
+                'expiration' => $now->format(Date::DATETIME_FORMAT_MICRO),
             ]
         );
+        $this->getGlobalSession()->refresh();
     }
 
     /**
@@ -176,9 +177,9 @@ class Session
         $database = Database::getInstance();
         $database->where('id', $this->getId());
         $database->update(
-            'sessions',
+            self::DB_TABLE,
             [
-                'expiration' => $now->sqldatetime(),
+                'expiration' => $now->format(Date::DATETIME_FORMAT_MICRO),
             ]
         );
     }

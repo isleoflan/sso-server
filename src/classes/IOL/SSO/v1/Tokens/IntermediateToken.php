@@ -111,6 +111,7 @@ class IntermediateToken
      */
     public function createNew(App $app, GlobalSession $globalSession): string
     {
+        $globalSession->refresh();
         $token = $this->generateToken($app, $globalSession);
 
         $expiration = new Date('now');
@@ -125,7 +126,7 @@ class IntermediateToken
             'app_id' => $app->getId(),
             'global_session_id' => $globalSession->getId(),
             'token' => $token,
-            'expiration' => $expiration->sqldatetime()
+            'expiration' => $expiration->format(Date::DATETIME_FORMAT_MICRO)
         ]);
 
         return $token;
@@ -168,7 +169,7 @@ class IntermediateToken
     }
 
     /**
-     * @throws InvalidValueException|EncryptionException
+     * @throws InvalidValueException|EncryptionException|\IOL\SSO\v1\Exceptions\NotFoundException
      */
     public function checkToken(string $token): array
     {
