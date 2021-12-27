@@ -21,12 +21,12 @@ $input = $response->getRequestData([
         'name' => 'resetId',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 106003,
+        'errorCode' => 501001,
     ],
 ]);
 
 try {
     $reset = new Reset($input['resetId']);
 } catch (IOLException) {
-    $response->addError(106003)->render();
+    $response->addError(501001)->render();
 }

@@ -39,7 +39,7 @@ try {
 
 $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest();
 try {
-    $loginRequest->loadAllocation($user);
+    $loginRequest->loadAllocation($user); // TODO: more sane shit
 } catch (\IOL\SSO\v1\Exceptions\IOLException) {
     $response->addError(105202)->render();
 }

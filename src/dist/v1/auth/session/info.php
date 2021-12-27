@@ -20,17 +20,17 @@ $input = $response->getRequestData([
         'name' => 'globalSessionId',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 103001,
+        'errorCode' => 102001,
     ],
 ]);
 
 try {
     $globalSession = new \IOL\SSO\v1\Session\GlobalSession($input['globalSessionId']);
 } catch (\IOL\SSO\v1\Exceptions\IOLException $e) {
-    $response->addError(103001)->render();
+    $response->addError(102001)->render();
 }
 if (!$globalSession->isValid()) {
-    APIResponse::getInstance()->addError(104002)->render();
+    APIResponse::getInstance()->addError(102002)->render();
 }
 
 $response->setData($globalSession->getInfo());

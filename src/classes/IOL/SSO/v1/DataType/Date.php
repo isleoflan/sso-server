@@ -32,14 +32,14 @@ class Date extends DateTime
                     new DateTimeZone(self::TIMEZONE_SWISS)
                 );
             } catch (Exception) {
-                APIResponse::getInstance()->addError(999901)->render();
+                APIResponse::getInstance()->addError(999101)->render();
             }
         } else {
             try {
                 $timezone = new DateTimeZone(self::TIMEZONE_SWISS);
                 parent::__construct($time, $timezone);
             } catch (Exception) {
-                APIResponse::getInstance()->addError(999901)->render();
+                APIResponse::getInstance()->addError(999101)->render();
             }
         }
 

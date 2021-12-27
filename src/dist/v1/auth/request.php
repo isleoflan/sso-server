@@ -19,14 +19,14 @@ $input = $response->getRequestData([
         'name' => 'redirectURL',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 103001,
+        'errorCode' => 101001,
     ],
 
 ]);
 
 $app = App::getCurrent();
 if (!$app->checkRedirectURL($input['redirectURL'])) {
-    $response->addError(102001)->render();
+    $response->addError(101001)->render();
 }
 
 
