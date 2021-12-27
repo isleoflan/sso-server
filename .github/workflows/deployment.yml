@@ -93,7 +93,7 @@ jobs:
             rm "${{ secrets.BASE_PATH }}staging"
             ln -s "${{ secrets.DEPLOYMENTS_FOLDER }}/${{ steps.deployment-id.outputs.DEPLOYMENT_ID }}" live
             cd live
-            date +"%V.%u-%k%M" > classes/IOL/SSO/v1/VERSION.vsf
+            date +"%y.%V.%u-%H%M" > classes/IOL/SSO/v1/VERSION.vsf
             cp ${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
       
       
