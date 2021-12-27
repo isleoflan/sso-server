@@ -26,32 +26,32 @@ $input = $response->getRequestData([
         'name' => 'loginRequestId',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 102002,
+        'errorCode' => 101002,
     ],
     [
         'name' => 'globalSessionId',
         'types' => ['string'],
         'required' => false,
-        'errorCode' => 0,
+        'errorCode' => 102001,
     ],
     [
         'name' => 'username',
         'types' => ['string'],
         'required' => false,
-        'errorCode' => 0,
+        'errorCode' => 103001,
     ],
     [
         'name' => 'password',
         'types' => ['string'],
         'required' => false,
-        'errorCode' => 0,
+        'errorCode' => 103002,
     ],
 ]);
 
 try {
     $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest($input['loginRequestId']);
 } catch (NotFoundException | InvalidValueException $e) {
-    APIResponse::getInstance()->addError(102002)->render();
+    APIResponse::getInstance()->addError(101002)->render();
 }
 
 
@@ -64,27 +64,27 @@ if (isset($input['username']) && $input['username'] !== '' && isset($input['pass
     try {
         $user = new User(username: $input['username']);
     } catch (NotFoundException | InvalidValueException $e) {
-        APIResponse::getInstance()->addError(100472)->render();
+        APIResponse::getInstance()->addError(901001)->render();
     }
     if ($user->login(password: $input['password'])) {
         $addGlobalSessionToResponse = true;
     } else {
-        APIResponse::getInstance()->addError(100472)->render();
+        APIResponse::getInstance()->addError(901001)->render();
     }
 } elseif (isset($input['globalSessionId'])) {
     try {
         $globalSession = new \IOL\SSO\v1\Session\GlobalSession($input['globalSessionId']);
     } catch (InvalidValueException $e) {
-        APIResponse::getInstance()->addError(104001)->render();
+        APIResponse::getInstance()->addError(102001)->render();
     }
     if (!$globalSession->isValid()) {
-        APIResponse::getInstance()->addError(104002)->render();
+        APIResponse::getInstance()->addError(102002)->render();
     }
 
     $user = $globalSession->getUser();
     $user->setGlobalSession($globalSession);
 } else {
-    APIResponse::getInstance()->addError(104003)->render();
+    APIResponse::getInstance()->addError(103003)->render();
 }
 
 

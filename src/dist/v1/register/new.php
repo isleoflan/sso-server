@@ -7,13 +7,11 @@ use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\Email;
 use IOL\SSO\v1\DataType\PhoneNumber;
-use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\IOLException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
 use IOL\SSO\v1\Request\APIResponse;
-use IOL\SSO\v1\Tokens\IntermediateToken;
 use IOL\SSO\v1\Tokens\LoginRequest;
 
 $response = APIResponse::getInstance();
@@ -30,7 +28,7 @@ $input = $response->getRequestData([
         'name' => 'loginRequestId',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 102002,
+        'errorCode' => 101002,
     ],
     [
         'name' => 'username',
@@ -105,7 +103,7 @@ $input = $response->getRequestData([
 try {
     $loginRequest = new LoginRequest($input['loginRequestId']);
 } catch (NotFoundException | InvalidValueException $e) {
-    APIResponse::getInstance()->addError(102002)->render();
+    APIResponse::getInstance()->addError(101002)->render();
 }
 
 
@@ -151,7 +149,7 @@ if ($user->usernameIsTaken($input['username'])) {
 try {
     $birthDate = new Date($input['birthDate']);
 } catch (Exception $e) {
-    APIResponse::getInstance()->addError(105003);
+    APIResponse::getInstance()->addError(105109);
 }
 
 if (APIResponse::getInstance()->hasErrors()) {

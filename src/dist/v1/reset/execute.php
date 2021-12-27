@@ -3,8 +3,6 @@
     declare(strict_types=1);
 
     use IOL\SSO\v1\BitMasks\RequestMethod;
-    use IOL\SSO\v1\Entity\User;
-    use IOL\SSO\v1\Exceptions\NotFoundException;
     use IOL\SSO\v1\Request\APIResponse;
     use IOL\SSO\v1\Tokens\IntermediateToken;
 
@@ -22,7 +20,7 @@
                                                'name'      => 'resetId',
                                                'types'     => ['string'],
                                                'required'  => true,
-                                               'errorCode' => 106003,
+                                               'errorCode' => 501001,
                                            ],
                                            [
                                                'name'      => 'password',
@@ -35,7 +33,7 @@
     try {
         $reset = new \IOL\SSO\v1\Entity\Reset($input['resetId']);
     } catch (\IOL\SSO\v1\Exceptions\IOLException) {
-        $response->addError(106003)->render();
+        $response->addError(501001)->render();
     }
 
     // TODO: check expiration
@@ -45,7 +43,7 @@
 
     $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest();
     try {
-        $loginRequest->loadAllocation($user);
+        $loginRequest->loadAllocation($user); // TODO: more sane
     } catch (\IOL\SSO\v1\Exceptions\IOLException) {
         $response->addError(105202)->render();
     }

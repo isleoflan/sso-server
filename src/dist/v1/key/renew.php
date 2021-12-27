@@ -22,14 +22,14 @@
                                                'name'      => 'token',
                                                'types'     => ['string'],
                                                'required'  => true,
-                                               'errorCode' => 0,
+                                               'errorCode' => 401001,
                                            ],
                                        ]);
 
     try {
         $refreshToken = new RefreshToken($input['token']);
     } catch (IOLException $e) {
-        $response->addError(501001)->render();
+        $response->addError(401001)->render();
     }
 
     $session = $refreshToken->getSession();
@@ -37,11 +37,12 @@
     $globalSession = $session->getGlobalSession();
 
     if (!$globalSession->isValid()) {
-        $response->addError(501002)->render();
+        $response->addError(102002)->render();
     }
 
     $session->renew();
     $accessToken = Authentication::createNewToken($session);
 
     $response->addData('accessToken', $accessToken);
+    $response->addData('refreshToken', $input['token']);
     $response->addData('expiration', $session->getExpiry()->format(Date::DATE_FORMAT_ISO));

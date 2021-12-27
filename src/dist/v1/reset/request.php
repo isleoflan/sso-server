@@ -25,20 +25,20 @@ $input = $response->getRequestData([
         'name' => 'username',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 106001,
+        'errorCode' => 105101,
     ],
     [
         'name' => 'loginRequestId',
         'types' => ['string'],
         'required' => true,
-        'errorCode' => 106002,
+        'errorCode' => 101002,
     ],
 ]);
 
 try {
     $loginRequest = new LoginRequest($input['loginRequestId']);
 } catch (NotFoundException | InvalidValueException $e) {
-    APIResponse::getInstance()->addError(102002)->render();
+    APIResponse::getInstance()->addError(101002)->render();
 }
 
 try {

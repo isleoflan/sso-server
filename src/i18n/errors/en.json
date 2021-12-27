@@ -16,66 +16,38 @@
     "errorCode": 405
   },
 
-
-  "100472": {
-    "message": "Wrong username or password",
-    "errorCode": 403
-  },
-
-  "100473": {
-    "message": "E-Mail address has not been verified yet. A new verification e-mail has been triggered.",
-    "errorCode": 403
-  },
-
-  "100474": {
-    "message": "This user has been blocked",
-    "errorCode": 403
-  },
-
-
   "101001": {
-    "message": "Usage of disallowed Enum value",
-    "errorCode": 501
-  },
-
-
-
-  "102001": {
     "message": "Invalid redirection URL",
     "errorCode": 403
   },
-  "102002": {
+  "101002": {
     "message": "Login Request invalid",
     "errorCode": 403
   },
 
 
+  "102001": {
+    "message": "Global Session ID invalid",
+    "errorCode": 403
+  },
+  "102002": {
+    "message": "Global Session ID invalid or expired",
+    "errorCode": 403
+  },
+
+
   "103001": {
-    "message": "Invalid Redirect URL",
+    "message": "Username invalid",
     "errorCode": 403
   },
   "103002": {
-    "message": "Invalid Scope",
+    "message": "Password invalid",
     "errorCode": 403
   },
-
-
-
-  "104001": {
-    "message": "Invalid Global Session ID",
+  "103003": {
+    "message": "No username / password combination or global session id given",
     "errorCode": 403
   },
-  "104002": {
-    "message": "Global Session expired",
-    "errorCode": 403
-  },
-  "104003": {
-    "message": "Not all parameters have been provided",
-    "errorCode": 400
-  },
-
-
-
 
   "105001": {
     "message": "Provided E-Mail address is already registered",
@@ -85,44 +57,51 @@
     "message": "Provided username is already taken",
     "errorCode": 403
   },
-  "105003": {
-    "message": "Birth date is not valid",
-    "errorCode": 403
-  },
 
   "105101": {
-    "message": "Birth date is not valid",
+    "message": "Username is not valid",
     "errorCode": 403
   },
   "105102": {
-    "message": "Birth date is not valid",
+    "message": "Password is not valid",
     "errorCode": 403
   },
   "105103": {
-    "message": "Birth date is not valid",
+    "message": "Gender is not valid",
     "errorCode": 403
   },
   "105104": {
-    "message": "Birth date is not valid",
+    "message": "Forename is not valid",
     "errorCode": 403
   },
   "105105": {
-    "message": "Birth date is not valid",
+    "message": "Last name is not valid",
     "errorCode": 403
   },
   "105106": {
-    "message": "Birth date is not valid",
+    "message": "Address is not valid",
     "errorCode": 403
   },
   "105107": {
-    "message": "Birth date is not valid",
+    "message": "ZIP code is not valid",
     "errorCode": 403
   },
   "105108": {
+    "message": "City is not valid",
+    "errorCode": 403
+  },
+  "105109": {
     "message": "Birth date is not valid",
     "errorCode": 403
   },
-
+  "105110": {
+    "message": "E-Mail address is not valid",
+    "errorCode": 403
+  },
+  "105111": {
+    "message": "Phone number is not valid",
+    "errorCode": 403
+  },
 
   "105201": {
     "message": "Provided confirmation hash is invalid",
@@ -133,16 +112,41 @@
     "errorCode": 404
   },
 
+  "201001": {
+    "message": "App ID invalid",
+    "errorCode": 403
+  },
 
-  "202001": {
-    "message": "The provided token is of an invalid format",
-    "errorCode": 400
+  "301001": {
+    "message": "Invalid Intermediate Token",
+    "errorCode": 403
+  },
+
+  "401001": {
+    "message": "Invalid Refresh Token",
+    "errorCode": 403
+  },
+
+  "501001": {
+    "message": "Invalid Reset Token",
+    "errorCode": 403
   },
 
 
-  "401001": {
-    "message": "The provided token is invalid",
-    "errorCode": 404
+
+  "901001": {
+    "message": "Wrong username or password",
+    "errorCode": 403
+  },
+
+  "901002": {
+    "message": "E-Mail address has not been verified yet. A new verification e-mail has been triggered.",
+    "errorCode": 403
+  },
+
+  "901003": {
+    "message": "This user has been blocked",
+    "errorCode": 403
   },
 
 
@@ -174,14 +178,10 @@
     "message": "App ID invalid",
     "errorCode": 403
   },
-
-
-
   "999999": {
     "message": "Endpoint not found",
     "errorCode": 404
   },
-
   "0": {
     "message": "Undefined error",
     "errorCode": 500

@@ -10,6 +10,8 @@ use IOL\SSO\v1\DataType\UUID;
 use IOL\SSO\v1\Entity\App;
 use IOL\SSO\v1\Entity\oldUser;
 use IOL\SSO\v1\BitMasks\RequestMethod;
+use IOL\SSO\v1\Entity\User;
+use IOL\SSO\v1\Exceptions\IOLException;
 use IOL\SSO\v1\Exceptions\NotFoundException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\NoReturn;
@@ -182,7 +184,7 @@ class APIResponse
         $this->authRequired = $needsAuth;
     }
 
-    public function check(): ?oldUser
+    public function check(): ?User
     {
         $this->checkForOptionsMethod();
 
@@ -195,12 +197,7 @@ class APIResponse
         }
 
         if ($this->authRequired) {
-            $authResult = Authentication::authenticate();
-            if (!$authResult['success']) {
-                $this->addError($authResult['object'])->render();
-            }
-
-            return $authResult['object'];
+            return Authentication::authenticate();
         }
 
         return null;
@@ -516,20 +513,19 @@ class APIResponse
     }
 
     /**
-     * @return bool
+     * @return void
      */
-    private function checkForAppHeader(): bool
+    private function checkForAppHeader(): void
     {
         if (is_null(self::getRequestHeader(App::HEADER_NAME))) {
             APIResponse::getInstance()->addError(999106)->render();
         } else {
             try {
                 new App(self::getRequestHeader(App::HEADER_NAME));
-            } catch (NotFoundException) {
+            } catch (IOLException) {
                 APIResponse::getInstance()->addError(999107)->render();
             }
         }
-        return true;
     }
 
 

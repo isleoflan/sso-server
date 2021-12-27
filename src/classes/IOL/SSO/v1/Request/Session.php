@@ -24,7 +24,7 @@ class Session
      *
      * @see Session::EXPIRATION_LEEWAY
      */
-    public const EXPIRATION_INTERVAL = 1800;
+    public const EXPIRATION_INTERVAL = 30;
 
     /**
      * Defines the "wiggle room" in seconds, before the invalidation of the session is really taking place.
