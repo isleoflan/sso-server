@@ -215,7 +215,7 @@ class GlobalSession
         return [
             'username' => $this->user->getUsername(),
             'avatar' => 'https://avatars.dicebear.com/api/gridy/'.$this->user->getUsername().'.svg', // TODO: link account api / implement avatar & CDN service
-            'email' => $this->user->getEmail(), // TODO: link account api
+            'email' => $this->user->getEmail(),
         ];
     }
 

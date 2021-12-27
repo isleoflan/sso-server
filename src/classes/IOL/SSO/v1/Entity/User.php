@@ -111,21 +111,21 @@ class User
                     return true;
                 }
                 // oldUser has been blocked, throw respective error
-                APIResponse::getInstance()->addError(100474)->render();
+                APIResponse::getInstance()->addError(901003)->render();
             }
             // e-mail address has not been confirmed yet
             // first, resend the confirmation mail
             //$this->sendConfirmMail();
 
             // then throw respective error
-            APIResponse::getInstance()->addError(100473)->render();
+            APIResponse::getInstance()->addError(901002)->render();
         }
         // password does not match, throw error
-        APIResponse::getInstance()->addError(100472)->render();
+        APIResponse::getInstance()->addError(901001)->render();
     }
     // the email address, the user using to try to log in, is not registered / can not be found in DB
     // throw error
-    //APIResponse::getInstance()->addError(100472)->render();
+    //APIResponse::getInstance()->addError(901001)->render();
 
     public function usernameIsTaken(string $username): bool
     {
