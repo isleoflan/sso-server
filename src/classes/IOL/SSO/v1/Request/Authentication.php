@@ -40,8 +40,8 @@ class Authentication
 
         if (!$session->isExpired()) {
             // The session is valid and still in time.
-            // renew the session for further usage
-            $session->renew();
+            // do not renew the session for further usage
+            // $session->renew();
             $user = $session->getGlobalSession()->getUser();
 
             // if no user is attached to said session, cancel execution and throw an error
