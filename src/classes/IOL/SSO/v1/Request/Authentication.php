@@ -78,9 +78,9 @@ class Authentication
             APIResponse::getInstance()->addError(100003)->render();
         }
 
-        // check if given Auth header is a valid JWT token
-        $authToken = new TokenEncoded($authToken);
         try {
+            // check if given Auth header is a valid JWT token
+            $authToken = new TokenEncoded($authToken);
             $authToken->validate(file_get_contents(File::getBasePath() . self::JWT_PUBLIC_KEY), self::JWT_ALGORITHM);
         } catch (Exception) { // TODO: sometimes InvalidStructureExceptions don't get caught, check why
             // Token validation failed.
