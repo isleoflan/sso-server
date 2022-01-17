@@ -212,6 +212,23 @@ class User
         return !is_null($this->blocked);
     }
 
+    public function serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'gender' => $this->gender->getValue(),
+            'forename' => $this->foreName,
+            'lastname' => $this->lastName,
+            'address' => $this->address,
+            'zip_code' => $this->zipCode,
+            'city' => $this->city,
+            'birth_date' => $this->birthDate->format(Date::DATE_FORMAT_STD),
+            'email' => $this->email->getEmail(),
+            'phone' => $this->phone->international(),
+        ];
+    }
+
     /**
      * @return string
      */
