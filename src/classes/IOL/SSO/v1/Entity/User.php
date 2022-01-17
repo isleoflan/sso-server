@@ -221,9 +221,9 @@ class User
             'forename' => $this->foreName,
             'lastname' => $this->lastName,
             'address' => $this->address,
-            'zip_code' => $this->zipCode,
+            'zipCode' => $this->zipCode,
             'city' => $this->city,
-            'birth_date' => $this->birthDate->format(Date::DATE_FORMAT_STD),
+            'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
             'email' => $this->email->getEmail(),
             'phone' => $this->phone->international(),
         ];
