@@ -16,3 +16,5 @@ $response->isSSOFrontendOnly(false);
 $user = $response->check();
 
 $response->setData($user->serialize());
+
+$response->addData('hasOrder', true);
