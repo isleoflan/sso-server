@@ -39,7 +39,7 @@ class User
     private string $city;
     private Date $birthDate;
     private Email $email;
-    private PhoneNumber $phone;
+    private ?PhoneNumber $phone;
 
     private Scope $scope;
 
@@ -93,7 +93,7 @@ class User
         $this->city = $values['city'];
         $this->birthDate = new Date($values['birth_date']);
         $this->email = new Email($values['email']);
-        $this->phone = new PhoneNumber($values['phone']);
+        $this->phone = is_null($values['phone']) ? null : new PhoneNumber($values['phone']);
 
     }
 
@@ -110,7 +110,7 @@ class User
                     // and return that the login succeeded
                     return true;
                 }
-                // oldUser has been blocked, throw respective error
+                // User has been blocked, throw respective error
                 APIResponse::getInstance()->addError(901003)->render();
             }
             // e-mail address has not been confirmed yet
@@ -225,7 +225,7 @@ class User
             'city' => $this->city,
             'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
             'email' => $this->email->getEmail(),
-            'phone' => $this->phone->international(),
+            'phone' => is_null($this->phone) ? null : $this->phone->international(),
         ];
     }
 

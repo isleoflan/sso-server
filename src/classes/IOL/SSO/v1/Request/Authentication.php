@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace IOL\SSO\v1\Request;
 
 use IOL\SSO\v1\DataSource\File;
-use IOL\SSO\v1\DataType\UUID;
-use IOL\SSO\v1\Entity\oldUser;
 use Exception;
 use IOL\SSO\v1\Entity\User;
-use IOL\SSO\v1\Exceptions\InvalidValueException;
 use IOL\SSO\v1\Exceptions\IOLException;
-use IOL\SSO\v1\Exceptions\NotFoundException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use Nowakowskir\JWT\JWT;
@@ -30,10 +26,6 @@ class Authentication
     private static ?Session $session = null;
     private static bool $authResult;
 
-    #[ArrayShape([
-        'success' => 'bool',
-        'object' => 'oldUser|Error',
-    ])]
     public static function authenticate(): User
     {
         $session = self::getSessionFromRequest();

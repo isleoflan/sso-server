@@ -8,11 +8,9 @@ use IOL\SSO\v1\DataSource\Database;
 use IOL\SSO\v1\DataType\Date;
 use IOL\SSO\v1\DataType\UUID;
 use IOL\SSO\v1\Entity\App;
-use IOL\SSO\v1\Entity\oldUser;
 use IOL\SSO\v1\BitMasks\RequestMethod;
 use IOL\SSO\v1\Entity\User;
 use IOL\SSO\v1\Exceptions\IOLException;
-use IOL\SSO\v1\Exceptions\NotFoundException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\NoReturn;
 
