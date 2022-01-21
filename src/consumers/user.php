@@ -45,6 +45,7 @@ $userQueue->addConsumer(
         }
 
         $reset->sendResetMail();
+
         echo '[x] Sent Reset Mail for message ' . $message->body . "\r\n\r\n";
         $message->ack();
     },

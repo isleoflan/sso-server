@@ -19,7 +19,8 @@
     "ext-openssl": "*",
     "ext-bcmath": "*",
     "ext-sockets": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-ctype": "*"
   },
   "require-dev": {
     "nunomaduro/phpinsights": "v2.0.1",

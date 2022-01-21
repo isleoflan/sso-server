@@ -31,15 +31,22 @@ class Reset
     /**
      * @throws InvalidValueException
      */
-    public function __construct(string $id = null)
+    public function __construct(string $id = null, string $hash = null)
     {
+        $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . 'set-password/';
 
         if (!is_null($id)) {
             if (!UUID::isValid($id)) {
                 throw new InvalidValueException('Invalid Reset ID');
             }
             $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
-            $this->USER_RESET_URL = Environment::get('FRONTEND_BASE_URL') . '/set-password/';
+        }
+
+        if (!is_null($hash)) {
+            if (!ctype_xdigit($id)) {
+                throw new InvalidValueException('Invalid Reset Hash');
+            }
+            $this->loadData(Database::getRow('MD5(COUNCAT("'.Environment::get('RESET_HASH').'",id)', $hash, self::DB_TABLE));
         }
     }
 

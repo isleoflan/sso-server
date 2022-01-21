@@ -31,7 +31,7 @@
                                        ]);
 
     try {
-        $reset = new \IOL\SSO\v1\Entity\Reset($input['resetId']);
+        $reset = new \IOL\SSO\v1\Entity\Reset(hash: $input['resetId']);
     } catch (\IOL\SSO\v1\Exceptions\IOLException) {
         $response->addError(501001)->render();
     }

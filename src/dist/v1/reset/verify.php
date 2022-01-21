@@ -26,7 +26,7 @@ $input = $response->getRequestData([
 ]);
 
 try {
-    $reset = new Reset($input['resetId']);
+    $reset = new Reset(hash: $input['resetId']);
 } catch (IOLException) {
     $response->addError(501001)->render();
 }
