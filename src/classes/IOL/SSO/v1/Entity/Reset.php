@@ -83,7 +83,7 @@ class Reset
         $mail = new Mail();
         $mail->setReceiver($this->user->getEmail());
         $mail->setSubject('Passwort zurücksetzen');
-        $mail->setTemplate('register');
+        $mail->setTemplate('reset');
         $mail->addVariable('preheader', '');
         $mail->addVariable('expiration', (self::EXPIRATION / 60) . ' Minuten');
         $mail->addVariable('reseturl', $this->USER_RESET_URL . $this->getHash());
