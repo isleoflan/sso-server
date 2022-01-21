@@ -42,7 +42,8 @@ try {
 }
 
 try {
-    $user = new User(username: $input['username']);
+    $user = new User();
+    $user->loadByUsernameOrEmail($input['username']);
 } catch (IOLException) {
     $response->render();
 }

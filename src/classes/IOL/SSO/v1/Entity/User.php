@@ -69,6 +69,15 @@ class User
         $this->REGISTER_DOI_URL = Environment::get('FRONTEND_BASE_URL') . '/doi/verify/';
     }
 
+    public function loadByUsernameOrEmail(string $input): void
+    {
+        $database = Database::getInstance();
+        $database->where('username', $input);
+        $database->where('email', $input);
+        $data = $database->get(self::DB_TABLE);
+        $this->loadData($data[0] ?? false);
+    }
+
     /**
      * @throws NotFoundException
      */
