@@ -90,7 +90,7 @@ class App implements \JsonSerializable
             'title' => $this->title,
             'description' => $this->description,
             'baseUrl' => $this->baseUrl,
-            'icon' => ''
+            'icon' => 'https://cdn.isleoflan.ch/main/iol_black.svg'
         ];
     }
 }
