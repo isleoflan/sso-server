@@ -253,7 +253,7 @@ class User
     public function getGlobalSession(): ?GlobalSession
     {
         if (is_null($this->globalSession)) {
-            $this->createNewGlobalSession();
+            $this->globalSession = $this->createNewGlobalSession();
         }
         return $this->globalSession;
     }
