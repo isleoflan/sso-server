@@ -253,7 +253,7 @@ class User
     public function getGlobalSession(): ?GlobalSession
     {
         if (is_null($this->globalSession)) {
-            throw new NotFoundException('No Global Session has been defined yet.');
+            $this->createNewGlobalSession();
         }
         return $this->globalSession;
     }
