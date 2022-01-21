@@ -73,7 +73,7 @@ class User
     {
         $database = Database::getInstance();
         $database->where('username', $input);
-        $database->where('email', $input);
+        $database->where('email', $input,'=', 'OR');
         $data = $database->get(self::DB_TABLE);
         $this->loadData($data[0] ?? false);
     }
