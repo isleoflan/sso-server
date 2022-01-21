@@ -86,7 +86,7 @@ class Reset
         $mail->setTemplate('reset');
         $mail->addVariable('preheader', '');
         $mail->addVariable('expiration', (self::EXPIRATION / 60) . ' Minuten');
-        $mail->addVariable('reseturl', $this->USER_RESET_URL . $this->getHash());
+        $mail->addVariable('resetlink', $this->USER_RESET_URL . $this->getHash());
 
         $mailerQueue = new Queue(new QueueType(QueueType::MAILER));
         $mailerQueue->publishMessage(json_encode($mail), new QueueType(QueueType::MAILER));
