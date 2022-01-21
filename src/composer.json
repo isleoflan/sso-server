@@ -18,7 +18,8 @@
     "stui/statuspage-io": "v0.0.4",
     "ext-openssl": "*",
     "ext-bcmath": "*",
-    "ext-sockets": "*"
+    "ext-sockets": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "nunomaduro/phpinsights": "v2.0.1",
