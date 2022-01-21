@@ -36,7 +36,7 @@ $userQueue->addConsumer(
     callback: static function (\PhpAmqpLib\Message\AMQPMessage $message): void {
         echo '[o] New Message on queue "' . QueueType::RESET_USER . '": ' . $message->body . "\r\n";
         try {
-            $reset = new \IOL\SSO\v1\Entity\Reset(hash: $message->body);
+            $reset = new \IOL\SSO\v1\Entity\Reset(id: $message->body);
         } catch (Exception $e) {
             // User can not be found. Reject the message and if this happens the first time, requeue it.
             $message->reject(!$message->isRedelivered());

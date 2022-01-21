@@ -46,7 +46,7 @@ class Reset
             if (!ctype_xdigit($id)) {
                 throw new InvalidValueException('Invalid Reset Hash');
             }
-            $this->loadData(Database::getRow('MD5(CONCAT("'.Environment::get('RESET_HASH').'",id))', $hash, self::DB_TABLE));
+            $this->loadData(Database::getRow('MD5(CONCAT("'.Environment::get('RESET_SALT').'",id))', $hash, self::DB_TABLE));
         }
     }
 
@@ -101,7 +101,7 @@ class Reset
 
     public function getHash(): string
     {
-        return md5(Environment::get('RESET_HASH') . $this->id);
+        return md5(Environment::get('RESET_SALT') . $this->id);
     }
 
     /**
