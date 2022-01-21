@@ -43,7 +43,7 @@ class Reset
         }
 
         if (!is_null($hash)) {
-            if (!ctype_xdigit($id)) {
+            if (!ctype_xdigit($hash)) {
                 throw new InvalidValueException('Invalid Reset Hash');
             }
             $this->loadData(Database::getRow('MD5(CONCAT("'.Environment::get('RESET_SALT').'",id))', $hash, self::DB_TABLE));
