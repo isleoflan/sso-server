@@ -62,7 +62,8 @@ $addGlobalSessionToResponse = false;
 
 if (isset($input['username']) && $input['username'] !== '' && isset($input['password']) && $input['password'] !== '') {
     try {
-        $user = new User(username: $input['username']);
+        $user = new User();
+        $user->loadByUsernameOrEmail($input['username']);
     } catch (NotFoundException | InvalidValueException $e) {
         APIResponse::getInstance()->addError(901001)->render();
     }
