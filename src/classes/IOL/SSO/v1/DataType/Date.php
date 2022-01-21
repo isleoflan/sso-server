@@ -37,7 +37,7 @@ class Date extends DateTime
         } else {
             try {
                 $timezone = new DateTimeZone(self::TIMEZONE_SWISS);
-                parent::__construct($time, $timezone);
+                parent::__construct($time ?? 'now', $timezone);
             } catch (Exception) {
                 APIResponse::getInstance()->addError(999101)->render();
             }
