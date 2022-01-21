@@ -63,6 +63,7 @@ class Reset
         $this->id = $values['id'];
         $this->user = new User($values['user_id']);
         $this->created = new Date($values['created']);
+        $this->loginRequest = new LoginRequest($values['login_request_id']);
     }
 
     public function createNew(User $user, LoginRequest $loginRequest)
