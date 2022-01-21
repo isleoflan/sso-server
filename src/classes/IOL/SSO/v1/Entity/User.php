@@ -229,12 +229,12 @@ class User
                         ],
                         [
                             'name'		=> 'Benutzerdaten',
-                            'value'		=> $this->foreName.' '.$this->lastName.'\r\n'.$this->address.'\r\n'.$this->zipCode.' '.$this->city,
+                            'value'		=> $this->foreName.' '.$this->lastName."\r\n".$this->address."\r\n".$this->zipCode.' '.$this->city,
                             'inline'	=> true,
                         ],
                         [
                             'name'		=> 'Kontaktdaten',
-                            'value'		=> $this->email.'\r\n'.$this->phone->international(),
+                            'value'		=> $this->email."\r\n".$this->phone->international(),
                             'inline'	=> true,
                         ],
                     ],
