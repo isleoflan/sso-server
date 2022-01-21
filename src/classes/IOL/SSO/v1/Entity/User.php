@@ -209,6 +209,49 @@ class User
 
         $newUserQueue = new Queue(new QueueType(QueueType::ALL_USER));
         $newUserQueue->publishMessage($this->id, new QueueType(QueueType::NEW_USER));
+
+        $this->sendDiscordWebhook();
+    }
+
+    public function sendDiscordWebhook(): void
+    {
+        $data = [
+            'embeds' => [
+                [
+                    'title'			=> 'Neue Registration',
+                    'description'	=> 'Ein neuer Benutzer hat sich registriert',
+                    'color'			=> '11475628',
+                    'fields'		=> [
+                        [
+                            'name'		=> 'Benutzername',
+                            'value'		=> $this->username,
+                            'inline'	=> true,
+                        ],
+                        [
+                            'name'		=> 'Benutzerdaten',
+                            'value'		=> $this->foreName.' '.$this->lastName.'\r\n'.$this->address.'\r\n'.$this->zipCode.' '.$this->city,
+                            'inline'	=> true,
+                        ],
+                        [
+                            'name'		=> 'Kontaktdaten',
+                            'value'		=> $this->email.'\r\n'.$this->phone->international(),
+                            'inline'	=> true,
+                        ],
+                    ],
+                ]
+            ]
+        ];
+
+        $data = json_encode($data);
+
+        $discordRequest = curl_init(\IOL\SSO\v1\DataSource\Environment::get('DISCORD_WEBHOOK_URL'));
+        $headers = ['Content-Type: application/json'];
+
+        curl_setopt($discordRequest, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($discordRequest, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($discordRequest, CURLOPT_POST, true);
+        curl_setopt($discordRequest, CURLOPT_POSTFIELDS, $data);
+        curl_exec($discordRequest);
     }
 
     private function isActivated(): bool
