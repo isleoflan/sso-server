@@ -95,6 +95,7 @@ jobs:
             cd live
             date +"%y.%V.%u-%H%M" > classes/IOL/SSO/v1/VERSION.vsf
             cp ${{ secrets.BASE_PATH }}${{ secrets.DEPLOYMENTS_FOLDER }}/*.pem .
+            sudo supervisorctl restart sso-consumer:sso-consumer_00 
       
       
       - name: end maintenance mode
