@@ -28,15 +28,15 @@ $headers = [
 
 curl_setopt($apiRequest, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($apiRequest, CURLOPT_RETURNTRANSFER, 1);
-$response = curl_exec($apiRequest);
+$shopResponse = curl_exec($apiRequest);
 $responseCode = curl_getinfo($apiRequest, CURLINFO_HTTP_CODE);
 
 $hasOrder = false;
 if($responseCode == 200){
-    $response = json_decode($response, true);
+    $shopResponse = json_decode($shopResponse, true);
 
-    if(!isset($response['error'])) {
-        $hasOrder = $response['data']['hasOrder'];
+    if(!isset($shopResponse['error'])) {
+        $hasOrder = $shopResponse['data']['hasOrder'];
     }
 }
 
