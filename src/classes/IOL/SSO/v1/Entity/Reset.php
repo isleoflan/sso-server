@@ -111,4 +111,13 @@ class Reset
     {
         return $this->user;
     }
+
+    /**
+     * @return LoginRequest
+     */
+    public function getLoginRequest(): LoginRequest
+    {
+        return $this->loginRequest;
+    }
+
 }

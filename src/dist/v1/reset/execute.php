@@ -41,12 +41,9 @@
     $user = $reset->getUser();
     $user->changePassword($input['password']);
 
-    $loginRequest = new \IOL\SSO\v1\Tokens\LoginRequest();
-    try {
-        $loginRequest->loadAllocation($user); // TODO: more sane
-    } catch (\IOL\SSO\v1\Exceptions\IOLException) {
-        $response->addError(105202)->render();
-    }
+
+
+    $loginRequest = $reset->getLoginRequest();
     $redirectURL = $loginRequest->redeem();
 
 
