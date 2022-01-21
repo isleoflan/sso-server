@@ -22,7 +22,7 @@ $response->isSSOFrontendOnly(true);
 $response->check();
 $input = $response->getRequestData([
     [
-        'name' => 'username',
+        'name' => 'email',
         'types' => ['string'],
         'required' => true,
         'errorCode' => 105101,
@@ -43,7 +43,7 @@ try {
 
 try {
     $user = new User();
-    $user->loadByUsernameOrEmail($input['username']);
+    $user->loadByUsernameOrEmail($input['email']);
 } catch (IOLException) {
     $response->render();
 }
