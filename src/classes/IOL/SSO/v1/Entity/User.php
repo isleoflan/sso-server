@@ -104,6 +104,8 @@ class User
         $this->email = new Email($values['email']);
         $this->phone = is_null($values['phone']) ? null : new PhoneNumber($values['phone']);
 
+        $this->scope = new Scope($values['scope']);
+
     }
 
     public function login(string $password): bool
