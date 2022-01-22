@@ -278,6 +278,7 @@ class User
             'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
             'email' => $this->email->getEmail(),
             'phone' => is_null($this->phone) ? null : $this->phone->international(),
+            'scope' => $this->scope->getIntegerValue()
         ];
     }
 
