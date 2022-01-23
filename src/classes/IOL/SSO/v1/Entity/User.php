@@ -222,7 +222,7 @@ class User
                 [
                     'title'			=> 'Neue Registration',
                     'description'	=> 'Ein neuer Benutzer hat sich registriert',
-                    'color'			=> '11475628',
+                    'color'			=> '16744256',
                     'fields'		=> [
                         [
                             'name'		=> 'Benutzername',
