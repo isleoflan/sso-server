@@ -266,23 +266,29 @@ class User
         return !is_null($this->blocked);
     }
 
-    public function serialize(): array
+    public function serialize($minimal = false): array
     {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'gender' => $this->gender->getValue(),
-            'forename' => $this->foreName,
-            'lastname' => $this->lastName,
-            'address' => $this->address,
-            'zipCode' => $this->zipCode,
-            'city' => $this->city,
-            'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
-            'email' => $this->email->getEmail(),
-            'phone' => is_null($this->phone) ? null : $this->phone->international(),
-            'scope' => $this->scope->getIntegerValue(),
-            'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
-        ];
+        return $minimal ?
+            [
+                'id' => $this->id,
+                'username' => $this->username,
+                'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
+            ] :
+            [
+                'id' => $this->id,
+                'username' => $this->username,
+                'gender' => $this->gender->getValue(),
+                'forename' => $this->foreName,
+                'lastname' => $this->lastName,
+                'address' => $this->address,
+                'zipCode' => $this->zipCode,
+                'city' => $this->city,
+                'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
+                'email' => $this->email->getEmail(),
+                'phone' => is_null($this->phone) ? null : $this->phone->international(),
+                'scope' => $this->scope->getIntegerValue(),
+                'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
+            ];
     }
 
     /**

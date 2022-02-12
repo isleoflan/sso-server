@@ -153,6 +153,11 @@
     "errorCode": 403
   },
 
+  "901004": {
+    "message": "User does not exist",
+    "errorCode": 404
+  },
+
 
   "999101": {
     "message": "General Server Error",
