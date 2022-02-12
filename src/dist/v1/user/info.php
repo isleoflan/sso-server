@@ -24,7 +24,7 @@ $input = $response->getRequestData([
 ]);
 
 if(!isset($input['userId'])){
-    $response->needsAuth(false);
+    $response->needsAuth(true);
     $user = $response->check();
     $response->setData($user->serialize());
 
