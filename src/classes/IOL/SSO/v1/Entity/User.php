@@ -280,7 +280,8 @@ class User
             'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_ISO),
             'email' => $this->email->getEmail(),
             'phone' => is_null($this->phone) ? null : $this->phone->international(),
-            'scope' => $this->scope->getIntegerValue()
+            'scope' => $this->scope->getIntegerValue(),
+            'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
         ];
     }
 
@@ -406,5 +407,68 @@ class User
         $this->globalSession = $globalSession;
     }
 
+    public function update(
+        string $username,
+        Gender $gender,
+        string $forename,
+        string $lastname,
+        string $address,
+        int $zipCode,
+        string $city,
+        Date $birthDate,
+        Email $email,
+        PhoneNumber $phone,
+        ?string $password
+    )
+    {
+        $this->username = $username;
+        $this->gender = $gender;
+        $this->forename = $forename;
+        $this->lastname = $lastname;
+        $this->address = $address;
+        $this->zipCode = $zipCode;
+        $this->city = $city;
+        $this->birthDate = $birthDate;
+        $this->email = $email;
+        $this->phone = $phone;
+
+        if(!is_null($password)) {
+            $this->password = $this->getPasswordHash($password);
+        }
+
+        $database = Database::getInstance();
+        $database->where('id', $this->id);
+        $database->update(self::DB_TABLE, [
+            'username' => $this->username,
+            'gender' => $this->gender->getValue(),
+            'forename' => $this->forename,
+            'lastname' => $this->lastname,
+            'address' => $this->address,
+            'zipCode' => $this->zipCode,
+            'city' => $this->city,
+            'birthDate' => $this->birthDate->format(Date::DATE_FORMAT_STD),
+            'email' => $this->email->getEmail(),
+            'phone' => $this->phone->international(),
+        ]);
+    }
+
+    public function getCurrentSquad(): ?Squad
+    {
+        $database = Database::getInstance();
+        $database->where('user_id', $this->id);
+        $data = $database->get('squad_members');
+
+        if(isset($data[0]['squad_id'])){
+            $squad = new Squad();
+            $squad->loadData($data[0]);
+            return $squad;
+        }
+        return null;
+    }
+
+    public function isInSquad(): bool
+    {
+        return !is_null($this->getCurrentSquad());
+    }
 
 }

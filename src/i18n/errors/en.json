@@ -102,6 +102,10 @@
     "message": "Phone number is not valid",
     "errorCode": 403
   },
+  "105112": {
+    "message": "Phone vegetarian is not valid",
+    "errorCode": 403
+  },
 
   "105201": {
     "message": "Provided confirmation hash is invalid",
