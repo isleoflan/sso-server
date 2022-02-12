@@ -459,9 +459,7 @@ class User
         $data = $database->get('squad_members');
 
         if(isset($data[0]['squad_id'])){
-            $squad = new Squad();
-            $squad->loadData($data[0]);
-            return $squad;
+            return new Squad($data[0]['squad_id']);
         }
         return null;
     }
