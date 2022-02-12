@@ -10,7 +10,7 @@ $response = APIResponse::getInstance();
 $response->setAllowedRequestMethods(
     new RequestMethod(RequestMethod::GET)
 );
-$response->needsAuth(true);
+$response->needsAuth(false);
 $response->isSSOFrontendOnly(false);
 
 $user = $response->check();
@@ -24,6 +24,8 @@ $input = $response->getRequestData([
 ]);
 
 if(!isset($input['userId'])){
+    $response->needsAuth(false);
+    $user = $response->check();
     $response->setData($user->serialize());
 
     $apiRequest = curl_init('https://api.shop.isleoflan.ch/v1/user/orderinfo?userId='.$user->getId());
