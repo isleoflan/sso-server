@@ -41,6 +41,8 @@ class User
     private Email $email;
     private ?PhoneNumber $phone;
 
+    private string $avatar;
+
     private Scope $scope;
 
     private ?GlobalSession $globalSession = null;
@@ -106,6 +108,7 @@ class User
 
         $this->scope = new Scope($values['scope']);
 
+        $this->avatar = 'https://avatars.dicebear.com/api/gridy/'.$this->username.'.svg';
     }
 
     public function login(string $password): bool
@@ -272,6 +275,7 @@ class User
             [
                 'id' => $this->id,
                 'username' => $this->username,
+                'avatar' => $this->avatar,
                 'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
             ] :
             [
@@ -287,6 +291,7 @@ class User
                 'email' => $this->email->getEmail(),
                 'phone' => is_null($this->phone) ? null : $this->phone->international(),
                 'scope' => $this->scope->getIntegerValue(),
+                'avatar' => $this->avatar,
                 'squad' => is_null($this->getCurrentSquad()) ? null : $this->getCurrentSquad()->jsonSerialize()
             ];
     }
@@ -474,5 +479,15 @@ class User
     {
         return !is_null($this->getCurrentSquad());
     }
+
+    /**
+     * @return string
+     */
+    public function getAvatar(): string
+    {
+        return $this->avatar;
+    }
+
+
 
 }

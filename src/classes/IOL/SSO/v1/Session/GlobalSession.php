@@ -133,11 +133,7 @@ class GlobalSession
         } catch (Exception) {
             // no exception handling necessary. if the addition of the leeway fails, we work without it
         }
-        if ($now > $expiry) {
-            return false;
-        }
-
-        return true;
+        return $now <= $expiry;
     }
 
     /**
@@ -214,7 +210,7 @@ class GlobalSession
     {
         return [
             'username' => $this->user->getUsername(),
-            'avatar' => 'https://avatars.dicebear.com/api/gridy/'.$this->user->getUsername().'.svg', // TODO: link account api / implement avatar & CDN service
+            'avatar' => $this->user->getAvatar(), // TODO: link account api / implement avatar & CDN service
             'email' => $this->user->getEmail(),
         ];
     }
