@@ -76,8 +76,8 @@ class App implements \JsonSerializable
                 str_replace(['http://', 'https://'], '', $this->baseUrl)
             ) ||
             str_starts_with(
-                str_replace(['http://', 'https://'], '', 'dev.' . $redirectURL),
-                str_replace(['http://', 'https://'], '', $this->baseUrl)
+                str_replace(['http://', 'https://'], '', $redirectURL),
+                str_replace(['http://', 'https://'], '', 'dev.' . $this->baseUrl)
             ) ||
             str_contains(str_replace(['http://', 'https://'], '', $redirectURL), 'localhost');
     }
