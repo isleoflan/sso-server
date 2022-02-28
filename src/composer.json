@@ -15,7 +15,8 @@
     "php-amqplib/php-amqplib": ">=3.0",
     "phpmailer/phpmailer": "^6.3",
     "giggsey/libphonenumber-for-php": "^8.12.21",
-    "stui/statuspage-io": "v0.0.4",
+    "stui/statuspage-io": "*",
+    "sentry/sdk": "^3.1.1",
     "ext-openssl": "*",
     "ext-bcmath": "*",
     "ext-sockets": "*",
@@ -23,6 +24,7 @@
     "ext-ctype": "*"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "nunomaduro/phpinsights": "v2.0.1",
     "codeception/codeception": "^4.1",
     "codeception/module-phpbrowser": "^1.0.0",
